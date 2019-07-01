@@ -130,7 +130,7 @@ Florian Krause <florian@expyriment.org>
         self.dir_var = tk.StringVar()
         self.dir_var.set("")
         self.dir_entry = ttk.Entry(self.frame1, textvariable=self.dir_var,
-                                   takefocus=0, state=tk.DISABLED)
+                                   takefocus=0, state="readonly")
         self.dir_entry.grid(row=0, column=1, sticky="WE") #, padx=5)
         self.dir_button = ttk.Button(self.frame1, text="Browse",
                                      command=self.set_data_directory)
@@ -149,6 +149,8 @@ Florian Krause <florian@expyriment.org>
                                    relief=tk.SUNKEN)
         self.checksum_list = tk.Text(self.container, wrap="none",
                                      borderwidth=0, state=tk.DISABLED)
+        self.checksum_list.bind("<1>",
+                                lambda event: self.checksum_list.focus_set())
         self.vertical_scroll = ttk.Scrollbar(self.container, orient="vertical",
                                              command=self.checksum_list.yview)
         self.horizontal_scroll = ttk.Scrollbar(
@@ -314,8 +316,3 @@ if __name__ == "__main__":
     root.bind_class("TButton", "<Return>",
                     lambda event: event.widget.invoke())
     root.option_add('*tearOff', tk.FALSE)
-    root.geometry("1024x600")
-    root.grid_columnconfigure(0, weight=1)
-    root.grid_rowconfigure(2, weight=1)
-    app = App(root)
-    app.mainloop()
