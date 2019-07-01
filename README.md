@@ -5,7 +5,7 @@ Data Integrity Fingerprint (DIF)
 
 Oliver Lindemann (oliver@expyriment.org) & Florian Krause (florian@expyriment.org)
 
-General Documentation: http://expyriment.github.io/dataintegrityfingerprint
+General Documentation: http://expyriment.github.io/DIF
 
 Example using DIF package
 ```
