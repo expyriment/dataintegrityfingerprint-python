@@ -316,3 +316,8 @@ if __name__ == "__main__":
     root.bind_class("TButton", "<Return>",
                     lambda event: event.widget.invoke())
     root.option_add('*tearOff', tk.FALSE)
+    root.geometry("1024x600")
+    root.grid_columnconfigure(0, weight=1)
+    root.grid_rowconfigure(2, weight=1)
+    app = App(root)
+    app.mainloop()
