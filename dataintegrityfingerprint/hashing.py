@@ -12,7 +12,7 @@ the properties
 import hashlib
 import zlib
 
-# not support algorithm (so far):  "SHA-512/224", "SHA-512/256"  # TODO Florian, see slash in 'official' SHA name. might be a Problem?
+# currently support algorithm (so far):  "SHA-512/224", "SHA-512/256"  # TODO Florian, see slash in 'official' SHA name. might be a Problem?
 
 CRYPTOGRAPHIC_ALGORITHMS = sorted(["MD5",
                                    "SHA-1",
@@ -29,9 +29,13 @@ NON_CRYPTOGRAPHIC_ALGORITHMS = sorted(["CRC-32", "Adler-32"])
 def new_hash_instance(hash_algorithm, allow_non_cryptographic_algorithms=False):
     """return a new instance of an hash object. (similar hashlib.new())
 
-    Each HashAlgorithm object has the methods update & update_file and
-    the properties hash_algorithm (according the DIF naming convention),
-        checksum & digest_size.
+    Each HashAlgorithm object has the methods
+            update() &
+            update_file()
+    and the properties
+            hash_algorithm (according the DIF naming convention),
+            checksum &
+            digest_size.
 
     :param hash_algorithm:
     :param allow_non_cryptographic_algorithms:
@@ -78,7 +82,7 @@ class OpenSSLHashAlgorithm(_HashAlgorithm):
         self.hash_algorithm = hash_algorithm.upper().replace("_", "-")
         hashlib_name = self.hash_algorithm
 
-        # check for deviation names
+        # check for deviation names in python's hashlib
         deviating_names = [( "SHA-1", "SHA1"),
                               ("SHA-224", "SHA224"),
                               ("SHA-256", "SHA256"),
@@ -113,11 +117,11 @@ class ZlibHashAlgorithm(_HashAlgorithm):
     digest_size = 8
 
     def __init__(self, hash_algorithm):
-        hash_algorithm = hash_algorithm.upper()
+        hash_algorithm = hash_algorithm.upper().replace("_", "-")
         if hash_algorithm == "CRC-32":
             self._current = 0
             self._hasher = zlib.crc32
-            self.hash_algorithm = "CRC-32"
+            self.hash_algorithm = hash_algorithm
         elif hash_algorithm == "ADLER-32":
             self._current = None
             self._hasher = zlib.adler32
@@ -133,5 +137,5 @@ class ZlibHashAlgorithm(_HashAlgorithm):
             self._current = self._hasher(data)
 
     @property
-    def chechsum(self):
+    def checksum(self):
         return hex(self._current)[2:]
