@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import os
 import sys
 import argparse
@@ -7,7 +5,7 @@ import argparse
 from .hashing import CRYPTOGRAPHIC_ALGORITHMS, NON_CRYPTOGRAPHIC_ALGORITHMS
 from . import DataIntegrityFingerprint
 
-def run_cli():
+def run():
 
     def progress(count, total, status=''):
         bar_len = 50
@@ -104,4 +102,4 @@ def run_cli():
 
 
 if __name__ == "__main__":
-    run_cli()
+    run()

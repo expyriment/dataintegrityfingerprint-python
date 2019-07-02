@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 """
 This module provides wrapper for hash functions from different libraries
 to have a unique interface for all types of hash algorithm.
@@ -14,8 +12,20 @@ the properties
 import hashlib
 import zlib
 
-CRYPTOGRAPHIC_ALGORITHMS = sorted(hashlib.algorithms_guaranteed)
-NON_CRYPTOGRAPHIC_ALGORITHMS = sorted(["crc32", "adler32"])
+# not support algorithm (so far):  "SHA-512/224", "SHA-512/256"  # TODO Florian, see slash in 'official' SHA name. might be a Problem?
+
+CRYPTOGRAPHIC_ALGORITHMS = sorted(["MD5",
+                                   "SHA-1",
+                                   "SHA-224",
+                                   "SHA-256",
+                                   "SHA-384",
+                                   "SHA-512",
+                                   "SHA3-224",
+                                   "SHA3-256",
+                                   "SHA3-384",
+                                   "SHA3-512"])
+
+NON_CRYPTOGRAPHIC_ALGORITHMS = sorted(["CRC-32", "Adler-32"])
 
 def new_hash_instance(hash_algorithm, allow_non_cryptographic_algorithms=False):
     """return a new instance of an hash object. (similar hashlib.new())
@@ -28,22 +38,18 @@ def new_hash_instance(hash_algorithm, allow_non_cryptographic_algorithms=False):
 
     """
 
-    hash_algorithm = hash_algorithm.lower()
-    possible_algorithms = CRYPTOGRAPHIC_ALGORITHMS
     if allow_non_cryptographic_algorithms:
-        possible_algorithms += NON_CRYPTOGRAPHIC_ALGORITHMS
+        try:
+            return ZlibHashAlgorithm(hash_algorithm)
+        except:
+            pass
 
-    if hash_algorithm not in possible_algorithms :
-        raise RuntimeError("{0} is a not support hash algorithm.".format(
-                            hash_algorithm))
-
-    if hash_algorithm == "crc32":
-        return CRC32()
-    if hash_algorithm == "adler32":
-        return Adler32()
-    else:
+    try:
         return OpenSSLHashAlgorithm(hash_algorithm)
+    except:
+        pass
 
+    raise ValueError("{0} is a not support hash algorithm.".format(hash_algorithm))
 
 class _HashAlgorithm(object):
     # abstract super class of a hash algorithms
@@ -58,42 +64,36 @@ class _HashAlgorithm(object):
         pass
 
 
-class CRC32(_HashAlgorithm):
-
-    digest_size = 8
-
-    def __init__(self):
-        self._current = 0
-
-    def update(self, data):
-        self._current = zlib.crc32(data, self._current)
-
-    @property
-    def digest(self):
-        return hex(self._current)[2:]
-
-class Adler32(_HashAlgorithm):
-
-    digest_size = 8
-
-    def __init__(self):
-        self._current = None
-
-    def update(self, data):
-        try:
-            self._current = zlib.adler32(data, self._current)
-        except:
-            self._current = zlib.adler32(data)
-
-    @property
-    def digest(self):
-        return hex(self._current)[2:]
-
-
 class OpenSSLHashAlgorithm(_HashAlgorithm):
 
     def __init__(self, hash_algorithm):
-        self.hasher = hashlib.new(hash_algorithm)
+        """OpenSSLHashAlgorithm
+
+        DIF hash naming convention and hashlib algorithm names will be support.
+
+        :param hash_algorithm:
+        """
+
+        self.hash_algorithm = hash_algorithm.upper().replace("_", "-")
+        hashlib_name = self.hash_algorithm
+
+        # check for deviation names
+        deviating_names = [( "SHA-1", "SHA1"),
+                              ("SHA-224", "SHA224"),
+                              ("SHA-256", "SHA256"),
+                              ("SHA-384", "SHA384"),
+                              ("SHA-512", "SHA512")]
+        for dif_name, lib_name in deviating_names:
+            if self.hash_algorithm == dif_name or self.hash_algorithm == lib_name:
+                self.hash_algorithm = dif_name
+                hashlib_name = lib_name
+                break
+
+        if self.hash_algorithm not in CRYPTOGRAPHIC_ALGORITHMS:
+            raise ValueError("{0} is a not support hash algorithm.".format(self.hash_algorithm))
+
+        self.hasher = hashlib.new(hashlib_name)
+
 
     def update(self, data):
         self.hasher.update(data)
@@ -105,3 +105,32 @@ class OpenSSLHashAlgorithm(_HashAlgorithm):
     @property
     def digest_size(self):
         return self.hasher.digest_size
+
+
+class ZlibHashAlgorithm(_HashAlgorithm):
+
+    digest_size = 8
+
+    def __init__(self, hash_algorithm):
+        hash_algorithm = hash_algorithm.upper()
+        if hash_algorithm == "CRC-32":
+            self._current = 0
+            self._hasher = zlib.crc32
+            self.hash_algorithm = "CRC-32"
+        elif hash_algorithm == "ADLER-32":
+            self._current = None
+            self._hasher = zlib.adler32
+            self.hash_algorithm = "Adler-32"
+        else:
+            raise ValueError("{0} is a not support hash algorithm.".format(hash_algorithm))
+        self.hash_algorithm = hash_algorithm
+
+    def update(self, data):
+        try:
+            self._current = self._hasher(data, self._current)
+        except:
+            self._current = self._hasher(data)
+
+    @property
+    def digest(self):
+        return hex(self._current)[2:]

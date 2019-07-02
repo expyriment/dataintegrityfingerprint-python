@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """Data Integrity Fingerprint GUI.
 
 A GUI for the Data Integrity Fingerprint (DIF) Python reference implementation.
@@ -11,23 +9,14 @@ __author__ = 'Oliver Lindemann <oliver@expyriment.org>, ' +\
 
 
 import os
-import sys
 import platform
 import multiprocessing
 from threading import Thread
 from .hashing import CRYPTOGRAPHIC_ALGORITHMS
 
-if sys.version[0] == '3':
-    import tkinter as tk
-    import tkinter.ttk as ttk
-    from tkinter import filedialog, messagebox
-    from tkinter.scrolledtext import ScrolledText
-else:
-    import Tkinter as tk
-    import ttk
-    import tkFileDialog as filedialog
-    import tkMessageBox as messagebox
-    from ScrolledText import ScrolledText
+import tkinter as tk
+import tkinter.ttk as ttk
+from tkinter import filedialog, messagebox
 
 from . import DataIntegrityFingerprint as DIF
 
@@ -263,7 +252,7 @@ Florian Krause <florian@expyriment.org>
         self.checksum_list["state"] = tk.DISABLED
         self.dif_label.config(text="DIF ({0}):".format(
             self.algorithm_var.get()))
-        self.dif_var.set(self.dif.master_hash)
+        self.dif_var.set(self.dif.dif)
         self.copy_button["state"] = tk.NORMAL
         self.copy_button.focus()
         self.statusbar["text"] = "Done"
@@ -290,7 +279,7 @@ Florian Krause <florian@expyriment.org>
                 algorithm = os.path.splitext(filename)[-1].strip(".")
                 self.dif = DIF(filename, from_checksums_file=True,
                                hash_algorithm=self.algorithm_var.get())
-                master_hash = self.dif.master_hash
+                master_hash = self.dif.dif
                 checksums = self.dif.checksums.strip("\n")
                 self.dir_var.set("")
                 self.generate_button["state"] = tk.DISABLED

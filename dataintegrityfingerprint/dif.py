@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Data Integrity Fingerprint
 
@@ -8,16 +6,13 @@ Fingerprint (DIF).
 
 """
 
-from __future__ import unicode_literals
-
-
 __author__ = 'Oliver Lindemann <oliver@expyriment.org>, ' +\
              'Florian Krause <florian@expyriment.org>'
 
 import os
 import codecs
 import multiprocessing
-from . import hashing
+from .hashing import new_hash_instance
 
 CHECKSUMS_SEPERATOR = "  "
 
@@ -62,15 +57,9 @@ class DataIntegrityFingerprint:
         if not from_checksums_file:
             assert os.path.isdir(data)
 
-        if allow_non_cryptographic_algorithms and \
-                hash_algorithm in hashing.NON_CRYPTOGRAPHIC_ALGORITHMS:
-            Warning("Non cryptographic hash function is used.")
-        elif hash_algorithm not in hashing.CRYPTOGRAPHIC_ALGORITHMS:
-            raise ValueError("Hash algorithm '{0}' is not supported.".format(
-                hash_algorithm))
-
+        h = new_hash_instance(hash_algorithm, allow_non_cryptographic_algorithms)
+        self._hash_algorithm = h.hash_algorithm
         self._data = os.path.abspath(data)
-        self._hash_algorithm = hash_algorithm
         self._files = []
         self._hash_list = []
         self.multiprocessing = multiprocessing
@@ -89,7 +78,11 @@ class DataIntegrityFingerprint:
                                                     filename))
 
     def __str__(self):
-        return str(self.master_hash)
+        return str(self.dif)
+
+    @ property
+    def hash_algorithm(self):
+        return self._hash_algorithm
 
     @property
     def data(self):
@@ -109,12 +102,12 @@ class DataIntegrityFingerprint:
         return rtn
 
     @property
-    def master_hash(self):
+    def dif(self):
         if len(self.file_hash_list) < 1:
             return None
 
-        hasher = hashing.new_hash_instance(self._hash_algorithm,
-                                           self.allow_non_cryptographic_algorithms)
+        hasher = new_hash_instance(self._hash_algorithm,
+                                   self.allow_non_cryptographic_algorithms)
         hasher.update(self.checksums.encode("utf-8"))
         return hasher.digest
 
@@ -168,7 +161,7 @@ class DataIntegrityFingerprint:
 
         """
 
-        if self.master_hash is not None:
+        if self.dif is not None:
             if filename is None:
                 filename = os.path.split(self._data)[-1] + ".{0}".format(
                     self._hash_algorithm)
@@ -180,7 +173,7 @@ class DataIntegrityFingerprint:
 
 def _map_file_hash(x):
     # helper function for multi threading of file hashing
-    hasher = hashing.new_hash_instance(hash_algorithm=x[1],
+    hasher = new_hash_instance(hash_algorithm=x[1],
                                        allow_non_cryptographic_algorithms=x[2])
     hasher.update_file(filename=x[0])
     return hasher.digest, x[0]
