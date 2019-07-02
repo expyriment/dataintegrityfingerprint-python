@@ -66,9 +66,13 @@ Florian Krause <florian@expyriment.org>
         self.file_menu = tk.Menu(self.menubar)
         self.menubar.add_cascade(menu=self.file_menu, label="File")
         self.file_menu.add_command(label="Open checksums",
-                                   command=self.open_checksums,
+                                   command=lambda: Thread(
+                                       target=self.open_checksums,
+                                       daemon=True).start(),
                                    accelerator="{0}-O".format(modifier))
-        self.master.bind("<{0}-o>".format(modifier), self.open_checksums)
+        self.master.bind("<{0}-o>".format(modifier),
+                         lambda event: Thread(target=self.open_checksums,
+                                              daemon=True).start())
         self.file_menu.add_command(label="Save checksums",
                                    command=self.save_checksums,
                                    accelerator="{0}-S".format(modifier))
@@ -191,8 +195,8 @@ Florian Krause <florian@expyriment.org>
         "Set the data directory."""
 
         data_dir = filedialog.askdirectory()
-        if data_dir != "":
-            self.dir_var.set(data_dir + "/")
+        if os.path.isdir(data_dir):
+            self.dir_var.set(data_dir)
             self.generate_button["state"] = tk.NORMAL
             self.generate_button.focus()
             self.progressbar["value"] = 0
@@ -233,7 +237,7 @@ Florian Krause <florian@expyriment.org>
         def _progress(count, total, status=''):
             """Progress callback function"""
 
-            percents = int(round(100.0 * count / float(total), 1))
+            percents = int(100.0 * count / float(total))
             self.progressbar["value"] = percents
             self.statusbar["text"] = \
                 "Generating DIF...{0}% ({1})".format(percents, status)
@@ -262,47 +266,68 @@ Florian Krause <florian@expyriment.org>
         self.dif_var.set(self.dif.master_hash)
         self.copy_button["state"] = tk.NORMAL
         self.copy_button.focus()
-        self.statusbar["text"] = "Generating DIF...Done"
+        self.statusbar["text"] = "Done"
         self.unblock_gui()
 
     def open_checksums(self, *args):
         """Open checksums file."""
 
-        filename = filedialog.askopenfilename()
-        self.block_gui()
-        try:
-            self.statusbar["text"] = "Opening checksums file '{0}'...".format(
-                filename)
-
-            algorithm = os.path.splitext(filename)[-1].strip(".")
-            self.dif = DIF(filename, from_checksums_file=True,
-                           hash_algorithm=self.algorithm_var.get())
-            self.dir_var.set("")
-            self.generate_button["state"] = tk.DISABLED
-            self.progressbar["value"] = 100
-            self.checksum_list["state"] = tk.NORMAL
-            self.checksum_list.delete(1.0, tk.END)
-            self.checksum_list.insert(1.0, self.dif.checksums.strip("\n"))
-            self.checksum_list["state"] = tk.DISABLED
-            self.dif_label.config(text="DIF ({0}):".format(
-                algorithm))
-            self.dif_var.set(self.dif.master_hash)
-            self.copy_button["state"] = tk.NORMAL
-            self.copy_button.focus()
-            self.statusbar["text"] = \
-                "Opening checksums file '{0}'...Done".format(filename)
-        except:
-            pass
-        self.unblock_gui()
+        allowed_extensions = ""
+        for algorithm in CRYPTOGRAPHIC_ALGORITHMS:
+            allowed_extensions += "*.{0} ".format(algorithm)
+        filetypes = [("Checksum files", allowed_extensions.strip())]
+        filename = filedialog.askopenfilename(filetypes=filetypes)
+        if os.path.exists(filename):
+            try:
+                self.block_gui()
+                old_status = self.statusbar["text"]
+                old_progress_mode = self.progressbar["mode"]
+                old_progress_value = self.progressbar["value"]
+                self.progressbar["mode"] = "indeterminate"
+                self.progressbar["value"] = 0
+                self.progressbar.start()
+                self.statusbar["text"] = "Opening checksums..."
+                algorithm = os.path.splitext(filename)[-1].strip(".")
+                self.dif = DIF(filename, from_checksums_file=True,
+                               hash_algorithm=self.algorithm_var.get())
+                master_hash = self.dif.master_hash
+                checksums = self.dif.checksums.strip("\n")
+                self.dir_var.set("")
+                self.generate_button["state"] = tk.DISABLED
+                self.progressbar.stop()
+                self.progressbar["mode"] = "determinate"
+                self.progressbar["value"] = 100
+                self.checksum_list["state"] = tk.NORMAL
+                self.checksum_list.delete(1.0, tk.END)
+                self.checksum_list.insert(1.0, checksums)
+                self.checksum_list["state"] = tk.DISABLED
+                self.dif_label.config(text="DIF ({0}):".format(algorithm))
+                self.dif_var.set(master_hash)
+                self.copy_button["state"] = tk.NORMAL
+                self.copy_button.focus()
+                self.statusbar["text"] = filename
+                self.unblock_gui()
+            except:
+                self.progressbar.stop()
+                self.progressbar["mode"] = old_progress_mode
+                self.progressbar["value"] = old_progress_value
+                self.statusbar["text"] = old_status
+                self.unblock_gui()
+                messagebox.showerror("Error","Not a valid checksums file")
 
     def save_checksums(self, *args):
         "Save checksums file."""
 
         if self.checksum_list.get(1.0, tk.END).strip("\n") != "":
-            self.dif.save_checksums(filename=filedialog.asksaveasfilename(
-                defaultextension=self.algorithm_var.get(),
+            algorithm = self.dif_label["text"][5:-2]
+            filename=filedialog.asksaveasfilename(
+                defaultextension=algorithm,
+                filetypes=[("{0} files".format(algorithm),
+                            "*.{0}".format(algorithm))],
                 initialdir=os.path.split(self.dir_entry.get())[0],
-                initialfile=os.path.split(self.dir_entry.get())[-1]))
+                initialfile=os.path.split(self.dir_entry.get())[-1])
+            if filename != "":
+                self.dif.save_checksums(filename)
 
     def copy_dif_to_clipboard(self, *args):
         self.master.clipboard_clear()
@@ -310,9 +335,6 @@ Florian Krause <florian@expyriment.org>
 
 if __name__ == "__main__":
     root = tk.Tk()
-    #if platform.system() == "Linux":
-        #style = Style()
-        #style.theme_use("clam")
     root.bind_class("TButton", "<Return>",
                     lambda event: event.widget.invoke())
     root.option_add('*tearOff', tk.FALSE)
