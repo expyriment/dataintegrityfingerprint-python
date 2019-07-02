@@ -24,14 +24,14 @@ CRYPTOGRAPHIC_ALGORITHMS = sorted(["MD5",
                                    "SHA3-256",
                                    "SHA3-384",
                                    "SHA3-512"])
-
 NON_CRYPTOGRAPHIC_ALGORITHMS = sorted(["CRC-32", "Adler-32"])
 
 def new_hash_instance(hash_algorithm, allow_non_cryptographic_algorithms=False):
     """return a new instance of an hash object. (similar hashlib.new())
 
     Each HashAlgorithm object has the methods update & update_file and
-    the properties checksum & digest_size.
+    the properties hash_algorithm (according the DIF naming convention),
+        checksum & digest_size.
 
     :param hash_algorithm:
     :param allow_non_cryptographic_algorithms:
@@ -51,6 +51,7 @@ def new_hash_instance(hash_algorithm, allow_non_cryptographic_algorithms=False):
 
     raise ValueError("{0} is a not support hash algorithm.".format(hash_algorithm))
 
+
 class _HashAlgorithm(object):
     # abstract super class of a hash algorithms
 
@@ -69,7 +70,7 @@ class OpenSSLHashAlgorithm(_HashAlgorithm):
     def __init__(self, hash_algorithm):
         """OpenSSLHashAlgorithm
 
-        DIF hash naming convention and hashlib algorithm names will be support.
+        DIF algorithm naming convention and hashlib algorithm names are support.
 
         :param hash_algorithm:
         """
@@ -99,7 +100,7 @@ class OpenSSLHashAlgorithm(_HashAlgorithm):
         self.hasher.update(data)
 
     @property
-    def digest(self):
+    def checksum(self):
         return self.hasher.hexdigest()
 
     @property
@@ -132,5 +133,5 @@ class ZlibHashAlgorithm(_HashAlgorithm):
             self._current = self._hasher(data)
 
     @property
-    def digest(self):
+    def chechsum(self):
         return hex(self._current)[2:]

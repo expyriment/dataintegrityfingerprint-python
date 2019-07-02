@@ -109,7 +109,7 @@ class DataIntegrityFingerprint:
         hasher = new_hash_instance(self._hash_algorithm,
                                    self.allow_non_cryptographic_algorithms)
         hasher.update(self.checksums.encode("utf-8"))
-        return hasher.digest
+        return hasher.checksum
 
     def _sort_hash_list(self):
         self._hash_list = sorted(self._hash_list, key=lambda x: x[0] + x[1])
@@ -176,4 +176,4 @@ def _map_file_hash(x):
     hasher = new_hash_instance(hash_algorithm=x[1],
                                        allow_non_cryptographic_algorithms=x[2])
     hasher.update_file(filename=x[0])
-    return hasher.digest, x[0]
+    return hasher.checksum, x[0]
