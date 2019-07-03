@@ -76,7 +76,7 @@ Florian Krause <florian@expyriment.org>
         self.menubar.add_cascade(menu=self.options_menu, label="Options")
         self.algorithm_menu = tk.Menu(self.menubar)
         self.algorithm_var = tk.StringVar()
-        self.algorithm_var.set("sha256")
+        self.algorithm_var.set("SHA-256")
         for algorithm in CRYPTOGRAPHIC_ALGORITHMS:
             self.algorithm_menu.add_radiobutton(label=algorithm,
                                                 value=algorithm,
@@ -86,9 +86,9 @@ Florian Krause <florian@expyriment.org>
         self.update_menu = tk.Menu(self.menubar)
         self.update_var = tk.IntVar()
         self.update_var.set(1)
-        self.update_menu.add_radiobutton(label="on", value=1,
+        self.update_menu.add_radiobutton(label="On", value=1,
                                          variable=self.update_var)
-        self.update_menu.add_radiobutton(label="off (faster)", value=0,
+        self.update_menu.add_radiobutton(label="Off (faster)", value=0,
                                          variable=self.update_var)
         self.options_menu.add_cascade(menu=self.update_menu,
                                       label="Progress updating")
@@ -98,12 +98,12 @@ Florian Krause <florian@expyriment.org>
             self.multiprocess_var.set(1)
             self.multiprocess_menu = tk.Menu(self.menubar)
             self.multiprocess_menu.add_radiobutton(
-                label="on ({0} cores)".format(
+                label="On ({0} cores)".format(
                     multiprocessing.cpu_count()),
                 value=1,
                 variable=self.multiprocess_var)
             self.multiprocess_menu.add_radiobutton(
-                label="off", value=0, variable=self.multiprocess_var)
+                label="Off", value=0, variable=self.multiprocess_var)
             self.options_menu.add_cascade(menu=self.multiprocess_menu,
                                           label="Multi-core processing")
         self.help_menu = tk.Menu(self.menubar)
@@ -161,8 +161,7 @@ Florian Krause <florian@expyriment.org>
         self.frame2 = ttk.Frame(self.master)
         self.frame2.grid(row=3, column=0, sticky="NSWE")
         self.frame2.grid_columnconfigure(1, weight=1)
-        self.dif_label = ttk.Label(self.frame2, text="DIF ({0}):".format(
-            self.algorithm_var.get()))
+        self.dif_label = ttk.Label(self.frame2, text="DIF:")
         self.dif_label.grid(row=0, column=0)
         self.dif_var = tk.StringVar()
         self.dif_var.set("")
@@ -195,6 +194,7 @@ Florian Krause <florian@expyriment.org>
             self.dif_var.set("")
             self.dif = None
             self.statusbar["text"] = "Ready"
+            self.unblock_gui(enable_save_checksums=False)
 
     def block_gui(self):
         """Block GUI from user entry."""
@@ -208,11 +208,13 @@ Florian Krause <florian@expyriment.org>
         self.help_menu.entryconfig("About", state=tk.DISABLED)
         self.progressbar.grab_set()
 
-    def unblock_gui(self):
+    def unblock_gui(self, enable_save_checksums=True):
         """Unblock GUI from user entry."""
 
         self.file_menu.entryconfig("Open checksums", state=tk.NORMAL)
-        self.file_menu.entryconfig("Save checksums", state=tk.NORMAL)
+        if enable_save_checksums:
+            self.file_menu.entryconfig("Save checksums", state=tk.NORMAL)
+        self.file_menu.entryconfig("Quit", state=tk.NORMAL)
         self.options_menu.entryconfig("Hash algorithm", state=tk.NORMAL)
         self.options_menu.entryconfig("Progress updating", state=tk.NORMAL)
         self.options_menu.entryconfig("Multi-core processing",
@@ -250,8 +252,6 @@ Florian Krause <florian@expyriment.org>
         self.checksum_list.delete(1.0, tk.END)
         self.checksum_list.insert(1.0, self.dif.checksums.strip("\n"))
         self.checksum_list["state"] = tk.DISABLED
-        self.dif_label.config(text="DIF ({0}):".format(
-            self.algorithm_var.get()))
         self.dif_var.set(self.dif.dif)
         self.copy_button["state"] = tk.NORMAL
         self.copy_button.focus()
@@ -290,7 +290,6 @@ Florian Krause <florian@expyriment.org>
                 self.checksum_list.delete(1.0, tk.END)
                 self.checksum_list.insert(1.0, checksums)
                 self.checksum_list["state"] = tk.DISABLED
-                self.dif_label.config(text="DIF ({0}):".format(algorithm))
                 self.dif_var.set(master_hash)
                 self.copy_button["state"] = tk.NORMAL
                 self.copy_button.focus()
@@ -303,6 +302,7 @@ Florian Krause <florian@expyriment.org>
                 self.statusbar["text"] = old_status
                 self.unblock_gui()
                 messagebox.showerror("Error","Not a valid checksums file")
+                unblock_gui()
 
     def save_checksums(self, *args):
         "Save checksums file."""
@@ -317,6 +317,7 @@ Florian Krause <florian@expyriment.org>
                 initialfile=os.path.split(self.dir_entry.get())[-1])
             if filename != "":
                 self.dif.save_checksums(filename)
+            self.unblock_gui()
 
     def copy_dif_to_clipboard(self, *args):
         self.master.clipboard_clear()
