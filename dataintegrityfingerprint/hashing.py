@@ -58,7 +58,7 @@ def new_hash_instance(hash_algorithm, allow_non_cryptographic_algorithms=False):
     except:
         pass
 
-    raise ValueError("{0} is a not support hash algorithm.".format(
+    raise ValueError("{0} is not a supported hash algorithm.".format(
         hash_algorithm))
 
 
@@ -80,7 +80,9 @@ class OpenSSLHashAlgorithm(_HashAlgorithm):
     def __init__(self, hash_algorithm):
         """OpenSSLHashAlgorithm
 
-        DIF algorithm naming convention and hashlib algorithm names are support.
+        DIF algorithm naming convention and hashlib algorithm names are
+        support.
+
         Parameters
         ----------
         hash_algorithm : str
@@ -93,19 +95,26 @@ class OpenSSLHashAlgorithm(_HashAlgorithm):
         hashlib_name = self.hash_algorithm
 
         # check for deviation names in python's hashlib
-        deviating_names = [( "SHA-1", "SHA1"),
-                              ("SHA-224", "SHA224"),
-                              ("SHA-256", "SHA256"),
-                              ("SHA-384", "SHA384"),
-                              ("SHA-512", "SHA512")]
+        deviating_names = [("MD5", "md5"),
+                           ("SHA-1", "sha1"),
+                           ("SHA-224", "sha224"),
+                           ("SHA-256", "sha256"),
+                           ("SHA-384", "sha384"),
+                           ("SHA-512", "sha512"),
+                           ("SHA3-224", "sha3_224"),
+                           ("SHA3-256", "sha3_256"),
+                           ("SHA3-384", "sha3_384"),
+                           ("SHA3-512", "sha3_512")]
         for dif_name, lib_name in deviating_names:
-            if self.hash_algorithm == dif_name or self.hash_algorithm == lib_name:
+            if self.hash_algorithm == dif_name or\
+                    self.hash_algorithm == lib_name:
                 self.hash_algorithm = dif_name
                 hashlib_name = lib_name
                 break
 
         if self.hash_algorithm not in CRYPTOGRAPHIC_ALGORITHMS:
-            raise ValueError("{0} is a not support hash algorithm.".format(self.hash_algorithm))
+            raise ValueError("{0} is not a supported hash algorithm.".format(
+                self.hash_algorithm))
 
         self.hasher = hashlib.new(hashlib_name)
 
@@ -137,7 +146,8 @@ class ZlibHashAlgorithm(_HashAlgorithm):
             self._hasher = zlib.adler32
             self.hash_algorithm = "Adler-32"
         else:
-            raise ValueError("{0} is a not support hash algorithm.".format(hash_algorithm))
+            raise ValueError("{0} is not a supported hash algorithm.".format(
+                hash_algorithm))
         self.hash_algorithm = hash_algorithm
 
     def update(self, data):
