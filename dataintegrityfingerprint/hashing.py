@@ -1,19 +1,20 @@
+#TODO: PEP8, docstrings
 """
+Hashing.
+
 This module provides wrapper for hash functions from different libraries
 to have a unique interface for all types of hash algorithm.
 
-Each HashAlgorithm class has the methods 
-    update() & update_file() and
-the properties 
-    digest & digest_size.
-    
+Each `HashAlgorithm` class has the methods `update` & `update_file` and the
+properties `digest` & `digest_size`.
+
 """
 
 import hashlib
 import zlib
 
-# currently support algorithm (so far):  "SHA-512/224", "SHA-512/256"  # TODO Florian, see slash in 'official' SHA name. might be a Problem?
 
+# Currently supported algorithms
 CRYPTOGRAPHIC_ALGORITHMS = sorted(["MD5",
                                    "SHA-1",
                                    "SHA-224",
@@ -27,18 +28,22 @@ CRYPTOGRAPHIC_ALGORITHMS = sorted(["MD5",
 NON_CRYPTOGRAPHIC_ALGORITHMS = sorted(["CRC-32", "Adler-32"])
 
 def new_hash_instance(hash_algorithm, allow_non_cryptographic_algorithms=False):
-    """return a new instance of an hash object. (similar hashlib.new())
+    """Return a new instance of a hash object (similar to hashlib.new()).
 
-    Each HashAlgorithm object has the methods
-            update() &
-            update_file()
-    and the properties
-            hash_algorithm (according the DIF naming convention),
-            checksum &
-            digest_size.
+    Each HashAlgorithm object has the methods `update` & `update_file` and the
+    properties `hash_algorithm` (according the DIF naming convention),
+    `checksum & `digest_size`.
 
-    :param hash_algorithm:
-    :param allow_non_cryptographic_algorithms:
+    Parameters
+    ----------
+    hash_algorithm : str
+        one of `CRYPTOGRAPHIC_ALGORITHMS` (or `NON_CRYPTOGRAPHIC_ALGORITHMS`)
+    allow_non_cryptographic_algorithms : bool
+        if True, also allow `NON_CRYPTOGRAPHIC_ALGORITHMS`
+
+    Returns
+    -------
+    hasher : `ZlibHashAlgorithm` or `OpenSSLHashAlgorithm` object
 
     """
 
@@ -53,7 +58,8 @@ def new_hash_instance(hash_algorithm, allow_non_cryptographic_algorithms=False):
     except:
         pass
 
-    raise ValueError("{0} is a not support hash algorithm.".format(hash_algorithm))
+    raise ValueError("{0} is a not support hash algorithm.".format(
+        hash_algorithm))
 
 
 class _HashAlgorithm(object):
@@ -75,8 +81,12 @@ class OpenSSLHashAlgorithm(_HashAlgorithm):
         """OpenSSLHashAlgorithm
 
         DIF algorithm naming convention and hashlib algorithm names are support.
+        Parameters
+        ----------
+        hash_algorithm : str
+            one of `CRYPTOGRAPHIC_ALGORITHMS` (or
+            `NON_CRYPTOGRAPHIC_ALGORITHMS`)
 
-        :param hash_algorithm:
         """
 
         self.hash_algorithm = hash_algorithm.upper().replace("_", "-")

@@ -18,7 +18,8 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import filedialog, messagebox
 
-from . import DataIntegrityFingerprint as DIF
+from .dif import DataIntegrityFingerprint as DIF
+from .dif import DIF_SEPARATOR
 
 
 class App(ttk.Frame):
@@ -263,7 +264,8 @@ Florian Krause <florian@expyriment.org>
 
         allowed_extensions = ""
         for algorithm in CRYPTOGRAPHIC_ALGORITHMS:
-            allowed_extensions += "*.{0} ".format(algorithm)
+            extension = "".join(x for x in algorithm.lower() if x.isalnum())
+            allowed_extensions += "*.{0} ".format(extension)
         filetypes = [("Checksum files", allowed_extensions.strip())]
         filename = filedialog.askopenfilename(filetypes=filetypes)
         if os.path.exists(filename):
@@ -308,11 +310,12 @@ Florian Krause <florian@expyriment.org>
         "Save checksums file."""
 
         if self.checksum_list.get(1.0, tk.END).strip("\n") != "":
-            algorithm = self.dif_label["text"][5:-2]
+            algorithm = self.dif_var.get().split(DIF_SEPARATOR)[0]
+            extension = "".join(x for x in algorithm.lower() if x.isalnum())
             filename=filedialog.asksaveasfilename(
-                defaultextension=algorithm,
+                defaultextension=extension,
                 filetypes=[("{0} files".format(algorithm),
-                            "*.{0}".format(algorithm))],
+                            "*.{0}".format(extension))],
                 initialdir=os.path.split(self.dir_entry.get())[0],
                 initialfile=os.path.split(self.dir_entry.get())[-1])
             if filename != "":

@@ -14,7 +14,10 @@ import codecs
 import multiprocessing
 from .hashing import new_hash_instance
 
-CHECKSUMS_SEPERATOR = "  "
+
+CHECKSUMS_SEPARATOR = "  "
+DIF_SEPARATOR = "."
+
 
 class DataIntegrityFingerprint:
     """A class representing a DataIntegrityFingerprint (DIF).
@@ -43,32 +46,35 @@ class DataIntegrityFingerprint:
             using multi CPU cores (optional, default: True)
             speeds up creating of checksums for large data files
         allow_non_cryptographic_algorithms : bool
-            set True only, if you need non cryptographic algorithms (see notes!)
+            set True only, if you need non cryptographic algorithms (see
+            notes!)
 
         Note
         ----
-        We do not suggest to use non-cryptographic algorithms. Non-cryptographic
-        algorithms are, while much faster, not secure (e.g. can be tempered
-        with). Only use these algorithms to check for technical file damage and
-        in cases security is not of critical concern.
+        We do not suggest to use non-cryptographic algorithms.
+        Non-cryptographic algorithms are, while much faster, not secure (e.g.
+        can be tempered with). Only use these algorithms to check for technical
+        file damage and in cases security is not of critical concern.
 
         """
 
         if not from_checksums_file:
             assert os.path.isdir(data)
 
-        h = new_hash_instance(hash_algorithm, allow_non_cryptographic_algorithms)
+        h = new_hash_instance(hash_algorithm,
+                              allow_non_cryptographic_algorithms)
         self._hash_algorithm = h.hash_algorithm
         self._data = os.path.abspath(data)
         self._files = []
         self._hash_list = []
         self.multiprocessing = multiprocessing
-        self.allow_non_cryptographic_algorithms = allow_non_cryptographic_algorithms
+        self.allow_non_cryptographic_algorithms = \
+            allow_non_cryptographic_algorithms
 
         if from_checksums_file:
             with codecs.open(data, encoding="utf-8") as f:
                 for line in f:
-                    h, fl = line.split(CHECKSUMS_SEPERATOR, maxsplit=1)
+                    h, fl = line.split(CHECKSUMS_SEPARATOR, maxsplit=1)
                     self._hash_list.append((h, fl.strip()))
                 self._sort_hash_list()
         else:
@@ -98,7 +104,7 @@ class DataIntegrityFingerprint:
     def checksums(self):
         rtn = ""
         for h, fl in self.file_hash_list:
-            rtn += u"{0}{1}{2}\n".format(h, CHECKSUMS_SEPERATOR, fl)
+            rtn += u"{0}{1}{2}\n".format(h, CHECKSUMS_SEPARATOR, fl)
         return rtn
 
     @property
@@ -109,7 +115,9 @@ class DataIntegrityFingerprint:
         hasher = new_hash_instance(self._hash_algorithm,
                                    self.allow_non_cryptographic_algorithms)
         hasher.update(self.checksums.encode("utf-8"))
-        return "{0}/{1}".format(hasher.hash_algorithm, hasher.checksum)
+        prefix = "".join(
+            x for x in hasher.hash_algorithm.lower() if x.isalnum())
+        return "{0}{1}{2}".format(prefix, DIF_SEPARATOR, hasher.checksum)
 
     def _sort_hash_list(self):
         self._hash_list = sorted(self._hash_list, key=lambda x: x[0] + x[1])
@@ -129,9 +137,10 @@ class DataIntegrityFingerprint:
         """
 
         self._hash_list = []
-        func_args = zip(self._files,
-                        [self._hash_algorithm] * len(self._files),
-                        [self.allow_non_cryptographic_algorithms] * len(self._files))
+        func_args = zip(
+            self._files,
+            [self._hash_algorithm] * len(self._files),
+            [self.allow_non_cryptographic_algorithms] * len(self._files))
         if self.multiprocessing:
             imap = multiprocessing.Pool().imap_unordered
         else:
@@ -174,6 +183,6 @@ class DataIntegrityFingerprint:
 def _map_file_hash(x):
     # helper function for multi threading of file hashing
     hasher = new_hash_instance(hash_algorithm=x[1],
-                                       allow_non_cryptographic_algorithms=x[2])
+                               allow_non_cryptographic_algorithms=x[2])
     hasher.update_file(filename=x[0])
     return hasher.checksum, x[0]
