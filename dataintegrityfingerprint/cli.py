@@ -2,7 +2,6 @@ import os
 import sys
 import argparse
 
-from .hashing import CRYPTOGRAPHIC_ALGORITHMS, NON_CRYPTOGRAPHIC_ALGORITHMS
 from . import DataIntegrityFingerprint
 
 def run():
@@ -57,10 +56,10 @@ def run():
 
     if args['listalgos']:
         print("Crypothographic algorithms")
-        print("- " + "\n- ".join(CRYPTOGRAPHIC_ALGORITHMS))
+        print("- " + "\n- ".join(DataIntegrityFingerprint.CRYPTOGRAPHIC_ALGORITHMS))
         if args['noncrypto']:
             print("Non-crypothographic algorithms")
-            print("- " + "\n- ".join(NON_CRYPTOGRAPHIC_ALGORITHMS))
+            print("- " + "\n- ".join(DataIntegrityFingerprint.NON_CRYPTOGRAPHIC_ALGORITHMS))
 
         sys.exit()
 

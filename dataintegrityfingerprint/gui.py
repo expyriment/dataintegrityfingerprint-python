@@ -12,7 +12,6 @@ import os
 import platform
 import multiprocessing
 from threading import Thread
-from .hashing import CRYPTOGRAPHIC_ALGORITHMS
 
 import tkinter as tk
 import tkinter.ttk as ttk
@@ -78,7 +77,7 @@ Florian Krause <florian@expyriment.org>
         self.algorithm_menu = tk.Menu(self.menubar)
         self.algorithm_var = tk.StringVar()
         self.algorithm_var.set("SHA-256")
-        for algorithm in CRYPTOGRAPHIC_ALGORITHMS:
+        for algorithm in DIF.CRYPTOGRAPHIC_ALGORITHMS:
             self.algorithm_menu.add_radiobutton(label=algorithm,
                                                 value=algorithm,
                                                 variable=self.algorithm_var)
@@ -263,7 +262,7 @@ Florian Krause <florian@expyriment.org>
         """Open checksums file."""
 
         allowed_extensions = ""
-        for algorithm in CRYPTOGRAPHIC_ALGORITHMS:
+        for algorithm in DIF.CRYPTOGRAPHIC_ALGORITHMS:
             extension = "".join(x for x in algorithm.lower() if x.isalnum())
             allowed_extensions += "*.{0} ".format(extension)
         filetypes = [("Checksum files", allowed_extensions.strip())]
@@ -304,7 +303,7 @@ Florian Krause <florian@expyriment.org>
                 self.statusbar["text"] = old_status
                 self.unblock_gui()
                 messagebox.showerror("Error","Not a valid checksums file")
-                unblock_gui()
+                self.unblock_gui()
 
     def save_checksums(self, *args):
         "Save checksums file."""

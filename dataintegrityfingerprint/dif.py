@@ -12,25 +12,28 @@ __author__ = 'Oliver Lindemann <oliver@expyriment.org>, ' +\
 import os
 import codecs
 import multiprocessing
-from .hashing import new_hash_instance
 
+from . import openssl_hash_algorithm
+from . import zlib_hash_algorithm
 
-CHECKSUMS_SEPARATOR = "  "
 DIF_SEPARATOR = "."
-
+CHECKSUM_FILENAME_SEPARATOR = "  "
 
 class DataIntegrityFingerprint:
     """A class representing a DataIntegrityFingerprint (DIF).
 
     Example
     -------
-    dif = DataIntegrityFingerPrint("~/Downloads")
+    dif = DataIntegrityFingerprint("~/Downloads")
     print(dif)
     print(dif.checksums)
     """
 
+    CRYPTOGRAPHIC_ALGORITHMS = openssl_hash_algorithm.SUPPORTED_ALGORITHMS
+    NON_CRYPTOGRAPHIC_ALGORITHMS = zlib_hash_algorithm.SUPPORTED_ALGORITHMS
+
     def __init__(self, data, from_checksums_file=False,
-                 hash_algorithm="sha256", multiprocessing=True,
+                 hash_algorithm="SHA-256", multiprocessing=True,
                  allow_non_cryptographic_algorithms=False):
         """Create a DataIntegrityFingerprint object.
 
@@ -61,8 +64,7 @@ class DataIntegrityFingerprint:
         if not from_checksums_file:
             assert os.path.isdir(data)
 
-        h = new_hash_instance(hash_algorithm,
-                              allow_non_cryptographic_algorithms)
+        h = new_hash_instance(hash_algorithm, allow_non_cryptographic_algorithms)
         self._hash_algorithm = h.hash_algorithm
         self._data = os.path.abspath(data)
         self._files = []
@@ -74,7 +76,7 @@ class DataIntegrityFingerprint:
         if from_checksums_file:
             with codecs.open(data, encoding="utf-8") as f:
                 for line in f:
-                    h, fl = line.split(CHECKSUMS_SEPARATOR, maxsplit=1)
+                    h, fl = line.split(CHECKSUM_FILENAME_SEPARATOR, maxsplit=1)
                     self._hash_list.append((h, fl.strip()))
                 self._sort_hash_list()
         else:
@@ -104,7 +106,7 @@ class DataIntegrityFingerprint:
     def checksums(self):
         rtn = ""
         for h, fl in self.file_hash_list:
-            rtn += u"{0}{1}{2}\n".format(h, CHECKSUMS_SEPARATOR, fl)
+            rtn += u"{0}{1}{2}\n".format(h, CHECKSUM_FILENAME_SEPARATOR, fl)
         return rtn
 
     @property
@@ -137,16 +139,13 @@ class DataIntegrityFingerprint:
         """
 
         self._hash_list = []
-        func_args = zip(
-            self._files,
-            [self._hash_algorithm] * len(self._files),
-            [self.allow_non_cryptographic_algorithms] * len(self._files))
+        func_args = zip(self._files, [self._hash_algorithm] * len(self._files))
         if self.multiprocessing:
             imap = multiprocessing.Pool().imap_unordered
         else:
             imap = map
 
-        for counter, rtn in enumerate(imap(_map_file_hash, func_args)):
+        for counter, rtn in enumerate(imap(_hash_file_content, func_args)):
             if progress is not None:
                 progress(counter + 1, len(self._files),
                          "{0}/{1}".format(counter + 1, len(self._files)))
@@ -180,9 +179,51 @@ class DataIntegrityFingerprint:
 
             return True
 
-def _map_file_hash(x):
+
+def new_hash_instance(hash_algorithm, supported_non_cryptographic_algorithms=False):
+    """Return a new instance of a hash object (similar to hashlib.new()).
+
+    Each HashAlgorithm object has the methods `update` and the
+    properties `hash_algorithm` (according the DIF naming convention),
+    `checksum`
+
+    Parameters
+    ----------
+    hash_algorithm : str
+        one of `CRYPTOGRAPHIC_ALGORITHMS` (or `NON_CRYPTOGRAPHIC_ALGORITHMS`)
+    supported_non_cryptographic_algorithms : bool
+        if True, also allow `NON_CRYPTOGRAPHIC_ALGORITHMS`
+
+    Returns
+    -------
+    hasher : `ZlibHashAlgorithm` or `OpenSSLHashAlgorithm` object
+
+    """
+
+    if supported_non_cryptographic_algorithms:
+        try:
+            return zlib_hash_algorithm.ZlibHashAlgorithm(hash_algorithm)
+        except:
+            pass
+
+    try:
+        return openssl_hash_algorithm.OpenSSLHashAlgorithm(hash_algorithm)
+    except:
+        pass
+
+    raise ValueError("{0} is not a supported hash algorithm.".format(
+        hash_algorithm))
+
+
+def _hash_file_content(args):
+    # args = (filename, hash_algorithm)
     # helper function for multi threading of file hashing
-    hasher = new_hash_instance(hash_algorithm=x[1],
-                               allow_non_cryptographic_algorithms=x[2])
-    hasher.update_file(filename=x[0])
-    return hasher.checksum, x[0]
+    hasher = new_hash_instance(hash_algorithm=args[1],
+                               supported_non_cryptographic_algorithms=True)
+    with open(args[0], 'rb') as f:
+        for block in iter(lambda: f.read(64 * 1024), b''):
+            hasher.update(block)
+
+    return hasher.checksum, args[0]
+
+
