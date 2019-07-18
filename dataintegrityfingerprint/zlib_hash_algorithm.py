@@ -9,11 +9,26 @@ properties `checksum` & `hash_algorithm`
 
 import zlib
 
-SUPPORTED_ALGORITHMS = sorted(["CRC-32", "Adler-32"])
 
 class ZlibHashAlgorithm(object):
+    """Zlib hash algorithm."""
+
+    SUPPORTED_ALGORITHMS = sorted(["CRC-32",
+                                   "Adler-32"])
 
     def __init__(self, hash_algorithm):
+        """Initialize a ZlibHashAlgorithm.
+
+        DIF algorithm naming convention and hashlib algorithm names are
+        supported.
+
+        Parameters
+        ----------
+        hash_algorithm : str
+            one of `ZlibHashAlgorithm.SUPPORTED_ALGORITHMS`
+
+        """
+
         hash_algorithm = hash_algorithm.upper().replace("_", "-")
         if hash_algorithm == "CRC-32":
             self._current = 0

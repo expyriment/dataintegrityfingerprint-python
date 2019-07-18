@@ -6,18 +6,21 @@ Fingerprint (DIF).
 
 """
 
+
 __author__ = 'Oliver Lindemann <oliver@expyriment.org>, ' +\
              'Florian Krause <florian@expyriment.org>'
+
 
 import os
 import codecs
 import multiprocessing
 
-from . import openssl_hash_algorithm
-from . import zlib_hash_algorithm
+from .openssl_hash_algorithm import OpenSSLHashAlgorithm
+from .zlib_hash_algorithm import ZlibHashAlgorithm
 
-DIF_SEPARATOR = "."
+
 CHECKSUM_FILENAME_SEPARATOR = "  "
+
 
 class DataIntegrityFingerprint:
     """A class representing a DataIntegrityFingerprint (DIF).
@@ -27,10 +30,12 @@ class DataIntegrityFingerprint:
     dif = DataIntegrityFingerprint("~/Downloads")
     print(dif)
     print(dif.checksums)
+
     """
 
-    CRYPTOGRAPHIC_ALGORITHMS = openssl_hash_algorithm.SUPPORTED_ALGORITHMS
-    NON_CRYPTOGRAPHIC_ALGORITHMS = zlib_hash_algorithm.SUPPORTED_ALGORITHMS
+    CRYPTOGRAPHIC_ALGORITHMS = OpenSSLHashAlgorithm.SUPPORTED_ALGORITHMS
+    NON_CRYPTOGRAPHIC_ALGORITHMS = ZlibHashAlgorithm.SUPPORTED_ALGORITHMS
+    SEPARATOR = "."
 
     def __init__(self, data, from_checksums_file=False,
                  hash_algorithm="SHA-256", multiprocessing=True,
@@ -64,7 +69,8 @@ class DataIntegrityFingerprint:
         if not from_checksums_file:
             assert os.path.isdir(data)
 
-        h = new_hash_instance(hash_algorithm, allow_non_cryptographic_algorithms)
+        h = new_hash_instance(hash_algorithm,
+                              allow_non_cryptographic_algorithms)
         self._hash_algorithm = h.hash_algorithm
         self._data = os.path.abspath(data)
         self._files = []
@@ -110,16 +116,23 @@ class DataIntegrityFingerprint:
         return rtn
 
     @property
-    def dif(self):
+    def prefix(self):
+        return "".join(x for x in self.hash_algorithm.lower() if x.isalnum())
+
+    @property
+    def postfix(self):
         if len(self.file_hash_list) < 1:
             return None
 
         hasher = new_hash_instance(self._hash_algorithm,
                                    self.allow_non_cryptographic_algorithms)
         hasher.update(self.checksums.encode("utf-8"))
-        prefix = "".join(
-            x for x in hasher.hash_algorithm.lower() if x.isalnum())
-        return "{0}{1}{2}".format(prefix, DIF_SEPARATOR, hasher.checksum)
+        return hasher.checksum
+
+    @property
+    def dif(self):
+        if self.postfix is not None:
+            return self.prefix + self.SEPARATOR + self.postfix
 
     def _sort_hash_list(self):
         self._hash_list = sorted(self._hash_list, key=lambda x: x[0] + x[1])
@@ -179,8 +192,35 @@ class DataIntegrityFingerprint:
 
             return True
 
+    def diff_checksums(self, filename):
+        """Calculate difference of checksums to checksums file.
 
-def new_hash_instance(hash_algorithm, supported_non_cryptographic_algorithms=False):
+        Parameters
+        ----------
+        filename : str
+            the name of the checksums file
+
+        Returns
+        -------
+        diff : str
+            the difference of checksums to the checksums file
+            (minus means checksums is missing something from checksums file,
+            plus means checksums has something in addition to checksums file)
+
+        """
+
+        checksums = self.checksums.split("\n")
+        other = DataIntegrityFingerprint(filename, from_checksums_file=True,
+                                         hash_algorithm=self._hash_algorithm)
+        checksums_other = other.checksums.split("\n")
+        sub = ["- " + x for x in list(set(checksums_other) - set(checksums))]
+        add = ["+ " + x for x in list(set(checksums) - set(checksums_other))]
+
+        return "\n".join(["\n".join(sub), "\n".join(add)]).strip()
+
+
+def new_hash_instance(hash_algorithm,
+                      supported_non_cryptographic_algorithms=False):
     """Return a new instance of a hash object (similar to hashlib.new()).
 
     Each HashAlgorithm object has the methods `update` and the
@@ -190,9 +230,11 @@ def new_hash_instance(hash_algorithm, supported_non_cryptographic_algorithms=Fal
     Parameters
     ----------
     hash_algorithm : str
-        one of `CRYPTOGRAPHIC_ALGORITHMS` (or `NON_CRYPTOGRAPHIC_ALGORITHMS`)
+        one of `DataIntegrityFingerprint.CRYPTOGRAPHIC_ALGORITHMS`
+        (or `DataIntegrityFingerprint.NON_CRYPTOGRAPHIC_ALGORITHMS`)
     supported_non_cryptographic_algorithms : bool
-        if True, also allow `NON_CRYPTOGRAPHIC_ALGORITHMS`
+        if True, also allow hash algorithms from
+        `DataIntegrityFingerprint.NON_CRYPTOGRAPHIC_ALGORITHMS`
 
     Returns
     -------
@@ -202,12 +244,12 @@ def new_hash_instance(hash_algorithm, supported_non_cryptographic_algorithms=Fal
 
     if supported_non_cryptographic_algorithms:
         try:
-            return zlib_hash_algorithm.ZlibHashAlgorithm(hash_algorithm)
+            return ZlibHashAlgorithm(hash_algorithm)
         except:
             pass
 
     try:
-        return openssl_hash_algorithm.OpenSSLHashAlgorithm(hash_algorithm)
+        return OpenSSLHashAlgorithm(hash_algorithm)
     except:
         pass
 

@@ -13,8 +13,12 @@ properties `checksum` & `hash_algorithm`
 
 import hashlib
 
-# Currently supported algorithms
-SUPPORTED_ALGORITHMS = sorted(["MD5",
+
+class OpenSSLHashAlgorithm(object):
+    """OpenSSL hash algorithm."""
+
+    # Currently supported algorithms
+    SUPPORTED_ALGORITHMS = sorted(["MD5",
                                    "SHA-1",
                                    "SHA-224",
                                    "SHA-256",
@@ -26,19 +30,16 @@ SUPPORTED_ALGORITHMS = sorted(["MD5",
                                    "SHA3-512"])
 
 
-class OpenSSLHashAlgorithm(object):
-
     def __init__(self, hash_algorithm):
-        """OpenSSLHashAlgorithm
+        """Initialize a OpenSSLHashAlgorithm.
 
         DIF algorithm naming convention and hashlib algorithm names are
-        support.
+        supported.
 
         Parameters
         ----------
         hash_algorithm : str
-            one of `CRYPTOGRAPHIC_ALGORITHMS` (or
-            `NON_CRYPTOGRAPHIC_ALGORITHMS`)
+            one of `OpenSSLHashAlgorithm.SUPPORTED_ALGORITHMS`
 
         """
 
@@ -63,7 +64,7 @@ class OpenSSLHashAlgorithm(object):
                 hashlib_name = lib_name
                 break
 
-        if self.hash_algorithm not in SUPPORTED_ALGORITHMS:
+        if self.hash_algorithm not in self.SUPPORTED_ALGORITHMS:
             raise ValueError("{0} is not a supported hash algorithm.".format(
                 self.hash_algorithm))
 

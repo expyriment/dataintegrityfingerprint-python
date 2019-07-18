@@ -18,11 +18,14 @@ import tkinter.ttk as ttk
 from tkinter import filedialog, messagebox
 
 from .dif import DataIntegrityFingerprint as DIF
-from .dif import DIF_SEPARATOR
 
 
 class App(ttk.Frame):
+    """The main GUI application."""
+
     def __init__(self, master, *args, **kwargs):
+        """Initialize the GUI application."""
+
         ttk.Frame.__init__(self, master, *args, **kwargs)
         self.master = master
         self.master.title("Data Integrity Fingerprint (DIF)")
@@ -72,6 +75,14 @@ Florian Krause <florian@expyriment.org>
         self.master.bind("<{0}-q>".format(modifier),
                          lambda event: self.master.destroy())
         self.file_menu.entryconfig("Save checksums", state=tk.DISABLED)
+        self.edit_menu = tk.Menu(self.menubar)
+        self.menubar.add_cascade(menu=self.edit_menu, label="Edit")
+        self.edit_menu.add_command(label="Diff checksums",
+                                   command=self.diff_checksums,
+                                   accelerator="{0}-D".format(modifier))
+        self.master.bind("<{0}-d>".format(modifier),
+                         lambda event: self.diff_checksums())
+        self.edit_menu.entryconfig("Diff checksums", state=tk.DISABLED)
         self.options_menu = tk.Menu(self.menubar)
         self.menubar.add_cascade(menu=self.options_menu, label="Options")
         self.algorithm_menu = tk.Menu(self.menubar)
@@ -180,7 +191,7 @@ Florian Krause <florian@expyriment.org>
         self.statusbar.grid(row=4, column=0, sticky="WE")
 
     def set_data_directory(self, *args):
-        "Set the data directory."""
+        """Set the data directory."""
 
         data_dir = filedialog.askdirectory()
         if os.path.isdir(data_dir):
@@ -215,6 +226,7 @@ Florian Krause <florian@expyriment.org>
         if enable_save_checksums:
             self.file_menu.entryconfig("Save checksums", state=tk.NORMAL)
         self.file_menu.entryconfig("Quit", state=tk.NORMAL)
+        self.edit_menu.entryconfig("Diff checksums", state=tk.NORMAL)
         self.options_menu.entryconfig("Hash algorithm", state=tk.NORMAL)
         self.options_menu.entryconfig("Progress updating", state=tk.NORMAL)
         self.options_menu.entryconfig("Multi-core processing",
@@ -265,7 +277,7 @@ Florian Krause <florian@expyriment.org>
         for algorithm in DIF.CRYPTOGRAPHIC_ALGORITHMS:
             extension = "".join(x for x in algorithm.lower() if x.isalnum())
             allowed_extensions += "*.{0} ".format(extension)
-        filetypes = [("Checksum files", allowed_extensions.strip())]
+        filetypes = [("Checksums files", allowed_extensions.strip())]
         filename = filedialog.askopenfilename(filetypes=filetypes)
         if os.path.exists(filename):
             try:
@@ -306,10 +318,10 @@ Florian Krause <florian@expyriment.org>
                 self.unblock_gui()
 
     def save_checksums(self, *args):
-        "Save checksums file."""
+        """Save checksums file."""
 
         if self.checksum_list.get(1.0, tk.END).strip("\n") != "":
-            algorithm = self.dif_var.get().split(DIF_SEPARATOR)[0]
+            algorithm = self.dif_var.get().split(DIF.SEPARATOR)[0]
             extension = "".join(x for x in algorithm.lower() if x.isalnum())
             filename=filedialog.asksaveasfilename(
                 defaultextension=extension,
@@ -321,9 +333,66 @@ Florian Krause <florian@expyriment.org>
                 self.dif.save_checksums(filename)
             self.unblock_gui()
 
+    def diff_checksums(self, *args):
+        """Calculate difference of checksums to checksums file."""
+
+        allowed_extensions = ""
+        for algorithm in DIF.CRYPTOGRAPHIC_ALGORITHMS:
+            extension = "".join(x for x in algorithm.lower() if x.isalnum())
+            allowed_extensions += "*.{0} ".format(extension)
+        filetypes = [("Checksums files", allowed_extensions.strip())]
+        filename = filedialog.askopenfilename(filetypes=filetypes)
+        if os.path.exists(filename):
+            diff = self.dif.diff_checksums(filename)
+            DiffDialogue(self.master, filename, diff).show()
+
     def copy_dif_to_clipboard(self, *args):
         self.master.clipboard_clear()
         self.master.clipboard_append(self.dif_var.get())
+
+
+class DiffDialogue:
+    """The dialogue for the checksums differences."""
+
+    def __init__(self, master, filename, diff):
+        """Initialize the dialogue."""
+
+        self.master = master
+        top = self.top = tk.Toplevel(master)  #, background="grey85")
+        top.title("Differences to {0}".format(filename))
+
+        self.container = ttk.Frame(top, borderwidth=1,
+                                   relief=tk.SUNKEN)
+        self.checksum_list = tk.Text(self.container, wrap="none",
+                                     borderwidth=0)
+        self.checksum_list.bind("<1>",
+                                lambda event: self.checksum_list.focus_set())
+        self.vertical_scroll = ttk.Scrollbar(self.container, orient="vertical",
+                                             command=self.checksum_list.yview)
+        self.horizontal_scroll = ttk.Scrollbar(
+            self.container, orient="horizontal",
+            command=self.checksum_list.xview)
+        self.checksum_list.configure(yscrollcommand=self.vertical_scroll.set,
+                                     xscrollcommand=self.horizontal_scroll.set)
+        self.checksum_list.grid(row=0, column=0, sticky="NSWE")
+        self.vertical_scroll.grid(row=0, column=1, sticky="NS")
+        self.horizontal_scroll.grid(row=1, column=0, sticky="EW")
+        self.container.grid_rowconfigure(0, weight=1)
+        self.container.grid_columnconfigure(0, weight=1)
+        self.container.grid(row=0, column=0, sticky="NSWE")
+
+        self.checksum_list.insert(1.0, diff)
+        self.checksum_list["state"] = tk.DISABLED
+
+        top.focus()
+        top.bind('<Escape>', lambda x: self.top.destroy())
+        top.geometry("1024x400")
+        top.grid_columnconfigure(0, weight=1)
+        top.grid_rowconfigure(0, weight=1)
+
+    def show(self):
+        self.master.wait_window(self.top)
+
 
 if __name__ == "__main__":
     root = tk.Tk()
