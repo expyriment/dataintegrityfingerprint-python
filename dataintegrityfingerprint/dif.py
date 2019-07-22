@@ -193,7 +193,7 @@ class DataIntegrityFingerprint:
             return True
 
     def diff_checksums(self, filename):
-        """Calculate difference of checksums to checksums file.
+        """Calculate differences of checksums to checksums file.
 
         Parameters
         ----------

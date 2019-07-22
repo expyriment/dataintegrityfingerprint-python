@@ -36,10 +36,13 @@ def run():
                         action="store_true",
                         help="save checksums file",
                         default=False)
+    parser.add_argument("-d", "--diff-checksums-file", metavar="CHECKSUMSFILE",
+                        type=str,
+                        help="Calculate differences of checksums file to CHECKSUMSFILE")
     parser.add_argument("-n", "--no-multi-processing", dest="nomultiprocess",
                         action="store_true",
                         help="switch of multi processing",
-                        default=False)
+                        default="")
     parser.add_argument("-a", "--algorithm", metavar="ALGORITHM",
                         type= str,
                         help="the hash algorithm to be used (default=sha256)",
@@ -62,7 +65,6 @@ def run():
             print("- " + "\n- ".join(DataIntegrityFingerprint.NON_CRYPTOGRAPHIC_ALGORITHMS))
 
         sys.exit()
-
     if args["PATH"] is None:
         print("Use -h for help")
         sys.exit()
@@ -82,7 +84,7 @@ def run():
         print("")
 
     if args['checksumsfile']:
-        print(dif.checksums)
+        print(dif.checksums.strip())
     else:
         print(dif)
 
@@ -99,6 +101,10 @@ def run():
         else:
             print("Checksums have NOT been written.")
 
+    elif args['diff_checksums_file']:
+        diff = dif.diff_checksums(args['diff_checksums_file'])
+        if diff != "":
+            print(diff)
 
 if __name__ == "__main__":
     run()
