@@ -127,7 +127,7 @@ Florian Krause <florian@expyriment.org>
 
         # Main window
         self.frame1 = ttk.Frame(self.master)
-        self.frame1.grid(row=0, column=0, sticky="NSWE") #, padx=5, pady=5)
+        self.frame1.grid(row=0, column=0, sticky="NSWE")
         self.frame1.grid_columnconfigure(1, weight=1)
         self.dir_label = ttk.Label(self.frame1, text="Data directory:")
         self.dir_label.grid(row=0, column=0)
@@ -135,7 +135,7 @@ Florian Krause <florian@expyriment.org>
         self.dir_var.set("")
         self.dir_entry = ttk.Entry(self.frame1, textvariable=self.dir_var,
                                    takefocus=0, state="readonly")
-        self.dir_entry.grid(row=0, column=1, sticky="WE") #, padx=5)
+        self.dir_entry.grid(row=0, column=1, sticky="WE")
         self.dir_button = ttk.Button(self.frame1, text="Browse",
                                      command=self.set_data_directory)
         self.dir_button.grid(row=0, column=2)
@@ -255,9 +255,9 @@ Florian Krause <florian@expyriment.org>
                        hash_algorithm=self.algorithm_var.get(),
                        multiprocessing=multiprocessing)
         if self.update_var.get() == 1:
-            progress=_progress
+            progress = _progress
         else:
-            progress=None
+            progress = None
         self.dif.generate(progress=progress)
         self.progressbar["value"] = 100
         self.checksum_list["state"] = tk.NORMAL
@@ -308,13 +308,13 @@ Florian Krause <florian@expyriment.org>
                 self.copy_button.focus()
                 self.statusbar["text"] = filename
                 self.unblock_gui()
-            except:
+            except Exception:
                 self.progressbar.stop()
                 self.progressbar["mode"] = old_progress_mode
                 self.progressbar["value"] = old_progress_value
                 self.statusbar["text"] = old_status
                 self.unblock_gui()
-                messagebox.showerror("Error","Not a valid checksums file")
+                messagebox.showerror("Error", "Not a valid checksums file")
                 self.unblock_gui()
 
     def save_checksums(self, *args):
@@ -323,7 +323,7 @@ Florian Krause <florian@expyriment.org>
         if self.checksum_list.get(1.0, tk.END).strip("\n") != "":
             algorithm = self.dif_var.get().split(DIF.SEPARATOR)[0]
             extension = "".join(x for x in algorithm.lower() if x.isalnum())
-            filename=filedialog.asksaveasfilename(
+            filename = filedialog.asksaveasfilename(
                 defaultextension=extension,
                 filetypes=[("{0} files".format(algorithm),
                             "*.{0}".format(extension))],
@@ -358,7 +358,7 @@ class DiffDialogue:
         """Initialize the dialogue."""
 
         self.master = master
-        top = self.top = tk.Toplevel(master)  #, background="grey85")
+        top = self.top = tk.Toplevel(master)
         top.title("Differences to {0}".format(filename))
 
         self.container = ttk.Frame(top, borderwidth=1,

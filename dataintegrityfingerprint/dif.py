@@ -245,12 +245,12 @@ def new_hash_instance(hash_algorithm,
     if supported_non_cryptographic_algorithms:
         try:
             return ZlibHashAlgorithm(hash_algorithm)
-        except:
+        except Exception:
             pass
 
     try:
         return OpenSSLHashAlgorithm(hash_algorithm)
-    except:
+    except Exception:
         pass
 
     raise ValueError("{0} is not a supported hash algorithm.".format(
@@ -267,5 +267,3 @@ def _hash_file_content(args):
             hasher.update(block)
 
     return hasher.checksum, args[0]
-
-
