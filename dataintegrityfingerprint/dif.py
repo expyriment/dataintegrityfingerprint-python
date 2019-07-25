@@ -73,26 +73,23 @@ class DataIntegrityFingerprint:
                               allow_non_cryptographic_algorithms)
         self._hash_algorithm = h.hash_algorithm
         self._data = os.path.abspath(data)
-        self._files = []
         self._hash_list = []
         self.multiprocessing = multiprocessing
         self.allow_non_cryptographic_algorithms = \
             allow_non_cryptographic_algorithms
 
-        if from_checksums_file:
-            with codecs.open(data, encoding="utf-8") as f:
-                for line in f:
-                    h, fl = line.split(CHECKSUM_FILENAME_SEPARATOR, maxsplit=1)
-                    self._hash_list.append((h, fl.strip()))
-                self._sort_hash_list()
-        else:
-            for dir_, _, files in os.walk(self._data):
-                for filename in files:
-                    self._files.append(os.path.join(self._data, dir_,
-                                                    filename))
-
     def __str__(self):
         return str(self.dif)
+
+    def get_files(self):
+        # get all files to be hashed
+
+        rtn = []
+        if os.path.isdir(self._data):
+            for dir_, _, files in os.walk(self._data):
+                for filename in files:
+                    rtn.append(os.path.join(dir_, filename))
+        return rtn
 
     @ property
     def hash_algorithm(self):
@@ -152,18 +149,27 @@ class DataIntegrityFingerprint:
         """
 
         self._hash_list = []
-        func_args = zip(self._files, [self._hash_algorithm] * len(self._files))
-        if self.multiprocessing:
-            imap = multiprocessing.Pool().imap_unordered
-        else:
-            imap = map
 
-        for counter, rtn in enumerate(imap(_hash_file_content, func_args)):
-            if progress is not None:
-                progress(counter + 1, len(self._files),
-                         "{0}/{1}".format(counter + 1, len(self._files)))
-            fl = os.path.relpath(rtn[1], self._data).replace(os.path.sep, "/")
-            self._hash_list.append((rtn[0], fl))
+        if os.path.isfile(self._data):
+            # from  checksum file
+            with codecs.open(self._data, encoding="utf-8") as f:
+                for line in f:
+                    h, fl = line.split(CHECKSUM_FILENAME_SEPARATOR, maxsplit=1)
+                    self._hash_list.append((h, fl.strip()))
+        else:
+            files = self.get_files()
+            func_args = zip(files, [self._hash_algorithm] * len(files))
+            if self.multiprocessing:
+                imap = multiprocessing.Pool().imap_unordered
+            else:
+                imap = map
+
+            for counter, rtn in enumerate(imap(_hash_file_content, func_args)):
+                if progress is not None:
+                    progress(counter + 1, len(files),
+                             "{0}/{1}".format(counter + 1, len(files)))
+                fl = os.path.relpath(rtn[1], self.data).replace(os.path.sep, "/")
+                self._hash_list.append((rtn[0], fl))
 
         self._sort_hash_list()
 
@@ -184,7 +190,7 @@ class DataIntegrityFingerprint:
 
         if self.dif is not None:
             if filename is None:
-                filename = os.path.split(self._data)[-1] + ".{0}".format(
+                filename = os.path.split(self.data)[-1] + ".{0}".format(
                     self._hash_algorithm)
 
             with codecs.open(filename, 'w', "utf-8") as f:
