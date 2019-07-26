@@ -98,7 +98,7 @@ def run():
         from_checksums_file=args['fromchecksumsfile'],
         hash_algorithm=args["algorithm"],
         multiprocessing=not(args['nomultiprocess']),
-        dif_ignore_file=args["dif_ignore_file"],
+        alternative_difignore_file=args["dif_ignore_file"],
         allow_non_cryptographic_algorithms=args['noncrypto'])
 
     if not args['fromchecksumsfile'] and args['progressbar']:

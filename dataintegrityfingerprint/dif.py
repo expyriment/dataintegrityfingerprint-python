@@ -6,10 +6,8 @@ Fingerprint (DIF).
 
 """
 
-
 __author__ = 'Oliver Lindemann <oliver@expyriment.org>, ' +\
              'Florian Krause <florian@expyriment.org>'
-
 
 import os
 import codecs
@@ -18,8 +16,6 @@ import multiprocessing
 from .openssl_hash_algorithm import OpenSSLHashAlgorithm
 from .zlib_hash_algorithm import ZlibHashAlgorithm
 from .ignore_file import IgnoreFile
-
-CHECKSUM_FILENAME_SEPARATOR = "  "
 
 
 class DataIntegrityFingerprint:
@@ -36,10 +32,12 @@ class DataIntegrityFingerprint:
     CRYPTOGRAPHIC_ALGORITHMS = OpenSSLHashAlgorithm.SUPPORTED_ALGORITHMS
     NON_CRYPTOGRAPHIC_ALGORITHMS = ZlibHashAlgorithm.SUPPORTED_ALGORITHMS
     SEPARATOR = "."
+    CHECKSUM_FILENAME_SEPARATOR = "  "
+    DIF_IGNOREFILE = ".difignore"
 
     def __init__(self, data, from_checksums_file=False,
                  hash_algorithm="SHA-256", multiprocessing=True,
-                 dif_ignore_file = None,
+                 alternative_difignore_file=None,
                  allow_non_cryptographic_algorithms=False):
         """Create a DataIntegrityFingerprint object.
 
@@ -54,6 +52,8 @@ class DataIntegrityFingerprint:
         multiprocessing : bool
             using multi CPU cores (optional, default: True)
             speeds up creating of checksums for large data files
+        alternative_difignore_file : str,
+             path to dif ignore file file (optional, default: None)
         allow_non_cryptographic_algorithms : bool
             set True only, if you need non cryptographic algorithms (see
             notes!)
@@ -64,6 +64,16 @@ class DataIntegrityFingerprint:
         Non-cryptographic algorithms are, while much faster, not secure (e.g.
         can be tempered with). Only use these algorithms to check for technical
         file damage and in cases security is not of critical concern.
+
+        Dif-ignore File
+        ---------------
+        If the base data directory comprises a file `.difignore`,
+        all files and directories that match pattern defined in this file
+        will be ignored (similar the .gitignore). The difignore file is not
+        considered as part of the data and will be thus always ignored.
+
+        An alternative difignore file can be defined when creating a new
+        instance.
 
         """
 
@@ -79,10 +89,15 @@ class DataIntegrityFingerprint:
         self.allow_non_cryptographic_algorithms = \
             allow_non_cryptographic_algorithms
 
-        if dif_ignore_file is not None:
-            self._difignore = IgnoreFile(dif_ignore_file)
+        if alternative_difignore_file is not None:
+            self._difignore = IgnoreFile(alternative_difignore_file)
+            ## os.path.relpath(self._difignore.ignore_file, start=self._data)
         else:
-            self._difignore = None
+            tmp = os.path.join(self._data, self.DIF_IGNOREFILE)
+            if os.path.isfile(tmp):
+                self._difignore = IgnoreFile(tmp)
+            else:
+                self._difignore = None
 
     def __str__(self):
         return str(self.dif)
@@ -98,7 +113,8 @@ class DataIntegrityFingerprint:
                     for filename in files:
                         rtn.append(os.path.join(dir_, filename))
             else:
-                rtn = list(self._difignore.walk(self._data))
+                rtn = list(self._difignore.walk(self._data,
+                                                ignore_youself=False))
         return rtn
 
     @ property
@@ -119,7 +135,8 @@ class DataIntegrityFingerprint:
     def checksums(self):
         rtn = ""
         for h, fl in self.file_hash_list:
-            rtn += u"{0}{1}{2}\n".format(h, CHECKSUM_FILENAME_SEPARATOR, fl)
+            rtn += u"{0}{1}{2}\n".format(h, self.CHECKSUM_FILENAME_SEPARATOR,
+                                         fl)
         return rtn
 
     @property
@@ -164,7 +181,8 @@ class DataIntegrityFingerprint:
             # from  checksum file
             with codecs.open(self._data, encoding="utf-8") as f:
                 for line in f:
-                    h, fl = line.split(CHECKSUM_FILENAME_SEPARATOR, maxsplit=1)
+                    h, fl = line.split(self.CHECKSUM_FILENAME_SEPARATOR,
+                                       maxsplit=1)
                     self._hash_list.append((h, fl.strip()))
         else:
             files = self.get_files()
@@ -178,7 +196,7 @@ class DataIntegrityFingerprint:
                 if progress is not None:
                     progress(counter + 1, len(files),
                              "{0}/{1}".format(counter + 1, len(files)))
-                fl = os.path.relpath(rtn[1], self.data).replace(os.path.sep, "/")
+                fl = os.path.relpath(rtn[1], self.data).replace(os.path.sep,"/")
                 self._hash_list.append((rtn[0], fl))
 
         self._sort_hash_list()
