@@ -90,14 +90,14 @@ class DataIntegrityFingerprint:
             allow_non_cryptographic_algorithms
 
         if alternative_difignore_file is not None:
-            self._difignore = IgnoreFile(alternative_difignore_file)
+            self.difignore = IgnoreFile(alternative_difignore_file)
             ## os.path.relpath(self._difignore.ignore_file, start=self._data)
         else:
             tmp = os.path.join(self._data, self.DIF_IGNOREFILE)
             if os.path.isfile(tmp):
-                self._difignore = IgnoreFile(tmp)
+                self.difignore = IgnoreFile(tmp)
             else:
-                self._difignore = None
+                self.difignore = None
 
     def __str__(self):
         return str(self.dif)
@@ -107,15 +107,16 @@ class DataIntegrityFingerprint:
 
         rtn = []
         if os.path.isdir(self._data):
-            if self._difignore is None:
+            if self.difignore is None:
                 # no dif ignore defined
                 for dir_, _, files in os.walk(self._data):
                     for filename in files:
                         rtn.append(os.path.join(dir_, filename))
             else:
-                rtn = list(self._difignore.walk(self._data,
-                                                ignore_youself=False))
+                rtn = list(self.difignore.walk(self._data,
+                                               ignore_youself=False))
         return rtn
+
 
     @ property
     def hash_algorithm(self):
@@ -157,6 +158,23 @@ class DataIntegrityFingerprint:
     def dif(self):
         if self.postfix is not None:
             return self.prefix + self.SEPARATOR + self.postfix
+
+    def count_files(self):
+        """Returns tuple (included, ignored) with the number of files that are
+        included and ignored due the ignore file specification
+
+        """
+
+        included = len(self.get_files())
+        if self.difignore is None:
+            return (included, 0)
+
+        tmp = self.difignore
+        self.difignore = None
+        all_files = len(self.get_files())
+        self.difignore = tmp
+
+        return (included, all_files-included)
 
     def _sort_hash_list(self):
         self._hash_list = sorted(self._hash_list, key=lambda x: x[0] + x[1])
@@ -254,7 +272,7 @@ class DataIntegrityFingerprint:
 
 
 def new_hash_instance(hash_algorithm,
-                      supported_non_cryptographic_algorithms=False):
+                      support_non_cryptographic_algorithms=False):
     """Return a new instance of a hash object (similar to hashlib.new()).
 
     Each HashAlgorithm object has the methods `update` and the
@@ -266,7 +284,7 @@ def new_hash_instance(hash_algorithm,
     hash_algorithm : str
         one of `DataIntegrityFingerprint.CRYPTOGRAPHIC_ALGORITHMS`
         (or `DataIntegrityFingerprint.NON_CRYPTOGRAPHIC_ALGORITHMS`)
-    supported_non_cryptographic_algorithms : bool
+    support_non_cryptographic_algorithms : bool
         if True, also allow hash algorithms from
         `DataIntegrityFingerprint.NON_CRYPTOGRAPHIC_ALGORITHMS`
 
@@ -276,7 +294,7 @@ def new_hash_instance(hash_algorithm,
 
     """
 
-    if supported_non_cryptographic_algorithms:
+    if support_non_cryptographic_algorithms:
         try:
             return ZlibHashAlgorithm(hash_algorithm)
         except Exception:
@@ -295,7 +313,7 @@ def _hash_file_content(args):
     # args = (filename, hash_algorithm)
     # helper function for multi threading of file hashing
     hasher = new_hash_instance(hash_algorithm=args[1],
-                               supported_non_cryptographic_algorithms=True)
+                               support_non_cryptographic_algorithms=True)
     with open(args[0], 'rb') as f:
         for block in iter(lambda: f.read(64 * 1024), b''):
             hasher.update(block)

@@ -18,6 +18,7 @@ import tkinter.ttk as ttk
 from tkinter import filedialog, messagebox
 
 from .dif import DataIntegrityFingerprint as DIF
+from .dif import new_hash_instance
 
 # TODO: difignore file
 
@@ -191,10 +192,11 @@ Florian Krause <florian@expyriment.org>
                                    relief=tk.SUNKEN, anchor=tk.W)
         self.statusbar.grid(row=4, column=0, sticky="WE")
 
-    def set_data_directory(self, *args):
+    def set_data_directory(self, data_dir=None, *args):
         """Set the data directory."""
 
-        data_dir = filedialog.askdirectory()
+        if data_dir is None:
+            data_dir = filedialog.askdirectory()
         if os.path.isdir(data_dir):
             self.dir_var.set(data_dir)
             self.generate_button["state"] = tk.NORMAL
@@ -394,8 +396,7 @@ class DiffDialogue:
     def show(self):
         self.master.wait_window(self.top)
 
-
-if __name__ == "__main__":
+def start_gui(data_dir=None, hash_algorithm=None):
     root = tk.Tk()
     root.bind_class("TButton", "<Return>",
                     lambda event: event.widget.invoke())
@@ -404,4 +405,14 @@ if __name__ == "__main__":
     root.grid_columnconfigure(0, weight=1)
     root.grid_rowconfigure(2, weight=1)
     app = App(root)
+
+    if data_dir is not None:
+        app.set_data_directory(os.path.abspath(data_dir))
+    if hash_algorithm is not None:
+        h = new_hash_instance(hash_algorithm)
+        app.algorithm_var.set(h.hash_algorithm)
+
     app.mainloop()
+
+if __name__ == "__main__":
+    start_gui()

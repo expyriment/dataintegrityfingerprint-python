@@ -3,7 +3,7 @@ import sys
 import argparse
 
 from . import DataIntegrityFingerprint
-
+from . import __version__
 
 def run():
 
@@ -16,62 +16,64 @@ def run():
         sys.stdout.flush()
 
     parser = argparse.ArgumentParser(
-        description="Create a Data Integrity Fingerprint (DIF).",
+        description="Create a Data Integrity Fingerprint (DIF). v{0}".format(
+        __version__),
         epilog="(c) O. Lindemann & F. Krause")
+
     parser.add_argument("PATH", nargs='?', default=None,
                         help="the path to the data folder or file")
-    parser.add_argument(
-        "-f",
-        "--from-checksums-file",
-        dest="fromchecksumsfile",
-        action="store_true",
-        help="PATH is a checksums file",
-        default=False)
-    parser.add_argument("-c", "--checksums-file", dest="checksumsfile",
+    parser.add_argument("-f", "--from-checksums-file", dest="fromchecksumsfile",
                         action="store_true",
-                        help="show checksums file",
+                        help="Calculate dif from checksums file. PATH is a checksums file",
                         default=False)
-    parser.add_argument("-p", "--progress", dest="progressbar",
-                        action="store_true",
-                        help="show progressbar",
-                        default=False)
-    parser.add_argument(
-        "-s",
-        "--save-checksums-file",
-        dest="savechecksumsfile",
-        action="store_true",
-        help="save checksums file",
-        default=False)
-    parser.add_argument(
-        "-d",
-        "--diff-checksums-file",
-        metavar="CHECKSUMSFILE",
-        type=str,
-        help="Calculate differences of checksums file to CHECKSUMSFILE")
-    parser.add_argument("-n", "--no-multi-processing", dest="nomultiprocess",
-                        action="store_true",
-                        help="switch of multi processing",
-                        default="")
+    parser.add_argument("-i", "--dif-ignore-file", metavar="DIFIGNOREFILE",
+                        type=str,
+                        help="'dif ignore file' specifies the to-be-ignored " +
+                             "files and folders. Otherwise the file "
+                             "`.difignore` in the base data folder "
+                             "will be used, if it exists",
+                        default=None)
     parser.add_argument("-a", "--algorithm", metavar="ALGORITHM",
                         type=str,
                         help="the hash algorithm to be used (default=sha256)",
                         default="sha256")
-    parser.add_argument("-i", "--dif-ignore-file", metavar="DIFIGNOREFILE",
-                        type=str,
-                        help="'dif ignore file' that specifies to-be-ignored " +
-                             "files and folders",
-                        default=None)
+    parser.add_argument("-C", "--checksums", dest="checksums",
+                        action="store_true",
+                        help="print checksums only",
+                        default=False)
+    parser.add_argument("-D", "--dif-only", dest="difonly",
+                        action="store_true",
+                        help="print dif only",
+                        default=False)
+    parser.add_argument("-G", "--gui", dest="gui",
+                        action="store_true",
+                        help="open graphical user interface",
+                        default=False)
     parser.add_argument("-L", "--list-available-algorithms", dest="listalgos",
                         action="store_true",
-                        help="list all available-algorithms",
+                        help="print available algorithms",
                         default=False)
-    parser.add_argument(
-        "--non-crypthographic",
-        dest="noncrypto",
-        action="store_true",
-        help="allow non crypthographic algorithms (Not suggested, please " +
-             "read documentation carefully!) ",
-        default=False)
+    parser.add_argument("-s", "--save-checksums-file", dest="savechecksumsfile",
+                        action="store_true",
+                        help="save checksums to file",
+                        default=False)
+    parser.add_argument("-d", "--diff-checksums-file", metavar="CHECKSUMSFILE",
+                        type=str,
+                        help="Calculate differences of checksums file to CHECKSUMSFILE")
+    parser.add_argument("-n", "--no-multi-processing", dest="nomultiprocess",
+                        action="store_true",
+                        help="switch of multi processing",
+                        default="")
+    parser.add_argument("-p", "--progress", dest="progressbar",
+                        action="store_true",
+                        help="show progressbar",
+                        default=False)
+    parser.add_argument("--non-crypthographic",
+                        dest="noncrypto",
+                        action="store_true",
+                        help="allow non crypthographic algorithms (Not suggested, please " +
+                             "read documentation carefully!) ",
+                        default=False)
 
     args = vars(parser.parse_args())
 
@@ -85,13 +87,14 @@ def run():
                 DataIntegrityFingerprint.NON_CRYPTOGRAPHIC_ALGORITHMS))
         sys.exit()
 
+    if args['gui']:
+        from .gui import start_gui
+        start_gui(data_dir=args["PATH"], hash_algorithm=args["algorithm"])
+        sys.exit()
+
     if args["PATH"] is None:
         print("Use -h for help")
         sys.exit()
-
-    if sys.version[0] == '2':
-        from builtins import input
-        args["PATH"] = args["PATH"].decode(sys.stdin.encoding)
 
     dif = DataIntegrityFingerprint(
         data=args["PATH"],
@@ -105,11 +108,7 @@ def run():
         dif.generate(progress=progress)
         print("")
 
-    if args['checksumsfile']:
-        print(dif.checksums.strip())
-    else:
-        print(dif)
-
+    #output
     if args['savechecksumsfile']:
         outfile = os.path.split(
             dif.data)[-1] + ".{0}".format(dif._hash_algorithm)
@@ -127,6 +126,24 @@ def run():
         diff = dif.diff_checksums(args['diff_checksums_file'])
         if diff != "":
             print(diff)
+
+    elif args['difonly']:
+        print(dif)
+    elif args['checksums']:
+        print(dif.checksums.strip())
+    else:
+        print("Data Integrity Fingerprint (DIF) v{0}".format(__version__))
+
+        print("\nFolder: {0}".format(dif.data))
+        n_files = dif.count_files()
+        print("Files: {0} included, {1} ignored".format(n_files[0],
+                                                          n_files[1]))
+        print("Algorithm: {0}".format(dif.hash_algorithm))
+        if dif.difignore is not None:
+            print("Ignore file: {}".format(dif.difignore.ignore_file))
+        print("DIF: {}".format(dif))
+
+
 
 
 if __name__ == "__main__":

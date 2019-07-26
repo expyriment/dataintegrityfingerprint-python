@@ -40,7 +40,6 @@ class IgnoreFile():
         except:
             raise RuntimeError("Can't read ignore file: {0}".format(self._ignore_file))
 
-
     def is_not_ignored(self, text):
         """False if the text matches one of the pattern specified in the
         ignore file
