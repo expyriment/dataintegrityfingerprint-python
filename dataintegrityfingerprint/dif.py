@@ -17,7 +17,7 @@ import multiprocessing
 
 from .openssl_hash_algorithm import OpenSSLHashAlgorithm
 from .zlib_hash_algorithm import ZlibHashAlgorithm
-
+from .ignore_file import IgnoreFile
 
 CHECKSUM_FILENAME_SEPARATOR = "  "
 
@@ -39,6 +39,7 @@ class DataIntegrityFingerprint:
 
     def __init__(self, data, from_checksums_file=False,
                  hash_algorithm="SHA-256", multiprocessing=True,
+                 dif_ignore_file = None,
                  allow_non_cryptographic_algorithms=False):
         """Create a DataIntegrityFingerprint object.
 
@@ -78,6 +79,11 @@ class DataIntegrityFingerprint:
         self.allow_non_cryptographic_algorithms = \
             allow_non_cryptographic_algorithms
 
+        if dif_ignore_file is not None:
+            self._difignore = IgnoreFile(dif_ignore_file)
+        else:
+            self._difignore = None
+
     def __str__(self):
         return str(self.dif)
 
@@ -86,9 +92,13 @@ class DataIntegrityFingerprint:
 
         rtn = []
         if os.path.isdir(self._data):
-            for dir_, _, files in os.walk(self._data):
-                for filename in files:
-                    rtn.append(os.path.join(dir_, filename))
+            if self._difignore is None:
+                # no dif ignore defined
+                for dir_, _, files in os.walk(self._data):
+                    for filename in files:
+                        rtn.append(os.path.join(dir_, filename))
+            else:
+                rtn = list(self._difignore.walk(self._data))
         return rtn
 
     @ property

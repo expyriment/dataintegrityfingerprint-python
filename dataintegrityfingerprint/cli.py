@@ -56,6 +56,11 @@ def run():
                         type=str,
                         help="the hash algorithm to be used (default=sha256)",
                         default="sha256")
+    parser.add_argument("-i", "--dif-ignore-file", metavar="DIFIGNOREFILE",
+                        type=str,
+                        help="'dif ignore file' that specifies to-be-ignored " +
+                             "files and folders",
+                        default=None)
     parser.add_argument("-L", "--list-available-algorithms", dest="listalgos",
                         action="store_true",
                         help="list all available-algorithms",
@@ -64,8 +69,10 @@ def run():
         "--non-crypthographic",
         dest="noncrypto",
         action="store_true",
-        help="allow non crypthographic algorithms (Not suggested, please read documentation carefully!) ",
+        help="allow non crypthographic algorithms (Not suggested, please " +
+             "read documentation carefully!) ",
         default=False)
+
     args = vars(parser.parse_args())
 
     if args['listalgos']:
@@ -76,8 +83,8 @@ def run():
             print("Non-crypothographic algorithms")
             print("- " + "\n- ".join(
                 DataIntegrityFingerprint.NON_CRYPTOGRAPHIC_ALGORITHMS))
-
         sys.exit()
+
     if args["PATH"] is None:
         print("Use -h for help")
         sys.exit()
@@ -90,8 +97,8 @@ def run():
         data=args["PATH"],
         from_checksums_file=args['fromchecksumsfile'],
         hash_algorithm=args["algorithm"],
-        multiprocessing=not(
-            args['nomultiprocess']),
+        multiprocessing=not(args['nomultiprocess']),
+        dif_ignore_file=args["dif_ignore_file"],
         allow_non_cryptographic_algorithms=args['noncrypto'])
 
     if not args['fromchecksumsfile'] and args['progressbar']:

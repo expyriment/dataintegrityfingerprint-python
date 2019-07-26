@@ -19,6 +19,7 @@ from tkinter import filedialog, messagebox
 
 from .dif import DataIntegrityFingerprint as DIF
 
+# TODO: difignore file
 
 class App(ttk.Frame):
     """The main GUI application."""
