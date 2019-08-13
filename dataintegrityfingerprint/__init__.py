@@ -1,7 +1,7 @@
 __author__ = 'Oliver Lindemann <oliver@expyriment.org>, ' \
              'Florian Krause <florian@expyriment.org>'
 
-__version__ = '0.5'
+__version__ = '0.5.2'
 
 from sys import version_info as _vi
 if _vi.major< 3:
@@ -9,4 +9,3 @@ if _vi.major< 3:
 
 
 from .dif import DataIntegrityFingerprint
-
