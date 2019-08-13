@@ -30,11 +30,11 @@ dataintegrityfingerprint -G
 DIF Command line interface
 --------------------------
 ```
-python3 -m dataintegrityfingerprint
+python3 -m dataintegrityfingerprint.cli
 ```
 or if installed via pip:
 ```
-dataintegrityfingerprint.cli
+dataintegrityfingerprint
 ```
 with the following options
 ```
