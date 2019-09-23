@@ -10,6 +10,8 @@ from sys import version_info as _vi
 
 package_name = "dataintegrityfingerprint"
 
+install_requires = []
+
 if _vi.major< 1:
     raise RuntimeError("{0} requires Python 3 or larger.".format(package_name))
 
@@ -35,6 +37,7 @@ def get_version(package):
 
 
 if __name__ == '__main__':
+    print(readme())
     setup(
         name = package_name,
         version=get_version(package_name),
@@ -46,7 +49,7 @@ if __name__ == '__main__':
         packages=[package_name],
         include_package_data=True,
         setup_requires=[],
-        install_requires=[],
+        install_requires=install_requires,
         entry_points={
             'console_scripts': ['dataintegrityfingerprint={0}.cli:run'.format(package_name)],
             },
@@ -60,6 +63,6 @@ if __name__ == '__main__':
             "Programming Language :: Python :: 3",
             "Topic :: Scientific/Engineering"
         ],
-        long_description_content_type='text/markdown',
-        long_description=readme()
-        )
+        long_description=readme(),
+        long_description_content_type='text/markdown'
+    )
