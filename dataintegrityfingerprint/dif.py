@@ -15,7 +15,6 @@ import multiprocessing
 
 from .openssl_hash_algorithm import OpenSSLHashAlgorithm
 from .zlib_hash_algorithm import ZlibHashAlgorithm
-from .ignore_file import IgnoreFile
 
 
 class DataIntegrityFingerprint:
@@ -33,11 +32,9 @@ class DataIntegrityFingerprint:
     NON_CRYPTOGRAPHIC_ALGORITHMS = ZlibHashAlgorithm.SUPPORTED_ALGORITHMS
     SEPARATOR = "_"
     CHECKSUM_FILENAME_SEPARATOR = "  "
-    DIF_IGNOREFILE = ".difignore"
 
     def __init__(self, data, from_checksums_file=False,
                  hash_algorithm="SHA-256", multiprocessing=True,
-                 alternative_difignore_file=None,
                  allow_non_cryptographic_algorithms=False):
         """Create a DataIntegrityFingerprint object.
 
@@ -52,8 +49,6 @@ class DataIntegrityFingerprint:
         multiprocessing : bool
             using multi CPU cores (optional, default: True)
             speeds up creating of checksums for large data files
-        alternative_difignore_file : str,
-             path to dif ignore file file (optional, default: None)
         allow_non_cryptographic_algorithms : bool
             set True only, if you need non cryptographic algorithms (see
             notes!)
@@ -64,16 +59,6 @@ class DataIntegrityFingerprint:
         Non-cryptographic algorithms are, while much faster, not secure (e.g.
         can be tempered with). Only use these algorithms to check for technical
         file damage and in cases security is not of critical concern.
-
-        Dif-ignore File
-        ---------------
-        If the base data directory comprises a file `.difignore`,
-        all files and directories that match pattern defined in this file
-        will be ignored (similar the .gitignore). The difignore file is not
-        considered as part of the data and will be thus always ignored.
-
-        An alternative difignore file can be defined when creating a new
-        instance.
 
         """
 
@@ -89,16 +74,6 @@ class DataIntegrityFingerprint:
         self.allow_non_cryptographic_algorithms = \
             allow_non_cryptographic_algorithms
 
-        if alternative_difignore_file is not None:
-            self.difignore = IgnoreFile(alternative_difignore_file)
-            ## os.path.relpath(self._difignore.ignore_file, start=self._data)
-        else:
-            tmp = os.path.join(self._data, self.DIF_IGNOREFILE)
-            if os.path.isfile(tmp):
-                self.difignore = IgnoreFile(tmp)
-            else:
-                self.difignore = None
-
     def __str__(self):
         return str(self.dif)
 
@@ -107,14 +82,9 @@ class DataIntegrityFingerprint:
 
         rtn = []
         if os.path.isdir(self._data):
-            if self.difignore is None:
-                # no dif ignore defined
-                for dir_, _, files in os.walk(self._data):
-                    for filename in files:
-                        rtn.append(os.path.join(dir_, filename))
-            else:
-                rtn = list(self.difignore.walk(self._data,
-                                               ignore_youself=False))
+            for dir_, _, files in os.walk(self._data):
+                for filename in files:
+                    rtn.append(os.path.join(dir_, filename))
         return rtn
 
 
@@ -160,21 +130,10 @@ class DataIntegrityFingerprint:
             return self.prefix + self.SEPARATOR + self.postfix
 
     def count_files(self):
-        """Returns tuple (included, ignored) with the number of files that are
-        included and ignored due the ignore file specification
-
+        """Returns the number of files that are included in the dif
         """
 
-        included = len(self.get_files())
-        if self.difignore is None:
-            return (included, 0)
-
-        tmp = self.difignore
-        self.difignore = None
-        all_files = len(self.get_files())
-        self.difignore = tmp
-
-        return (included, all_files-included)
+        return len(self.get_files())
 
     def _sort_hash_list(self):
         self._hash_list = sorted(self._hash_list, key=lambda x: x[0] + x[1])

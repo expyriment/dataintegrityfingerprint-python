@@ -20,8 +20,6 @@ from tkinter import filedialog, messagebox
 from .dif import DataIntegrityFingerprint as DIF
 from .dif import new_hash_instance
 
-# TODO: difignore file
-
 class App(ttk.Frame):
     """The main GUI application."""
 

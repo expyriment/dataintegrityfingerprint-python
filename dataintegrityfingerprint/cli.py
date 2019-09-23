@@ -26,13 +26,6 @@ def run():
                         action="store_true",
                         help="Calculate dif from checksums file. PATH is a checksums file",
                         default=False)
-    parser.add_argument("-i", "--dif-ignore-file", metavar="DIFIGNOREFILE",
-                        type=str,
-                        help="'dif ignore file' specifies the to-be-ignored " +
-                             "files and folders. Otherwise the file "
-                             "`.difignore` in the base data folder "
-                             "will be used, if it exists",
-                        default=None)
     parser.add_argument("-a", "--algorithm", metavar="ALGORITHM",
                         type=str,
                         help="the hash algorithm to be used (default=sha256)",
@@ -101,7 +94,6 @@ def run():
         from_checksums_file=args['fromchecksumsfile'],
         hash_algorithm=args["algorithm"],
         multiprocessing=not(args['nomultiprocess']),
-        alternative_difignore_file=args["dif_ignore_file"],
         allow_non_cryptographic_algorithms=args['noncrypto'])
 
     if not args['fromchecksumsfile'] and args['progressbar']:
@@ -135,12 +127,8 @@ def run():
         print("Data Integrity Fingerprint (DIF) v{0}".format(__version__))
 
         print("\nFolder: {0}".format(dif.data))
-        n_files = dif.count_files()
-        print("Files: {0} included, {1} ignored".format(n_files[0],
-                                                          n_files[1]))
+        print("Files: {0} included".format(dif.count_files()))
         print("Algorithm: {0}".format(dif.hash_algorithm))
-        if dif.difignore is not None:
-            print("Ignore file: {}".format(dif.difignore.ignore_file))
         print("DIF: {}".format(dif))
 
 
