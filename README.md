@@ -11,6 +11,7 @@ General Documentation: http://expyriment.github.io/DIF
 
 Install
 -------
+
 ```
 python3 -m pip install --index-url https://test.pypi.org/simple/ dataintegrityfingerprint
 ```
@@ -18,10 +19,13 @@ python3 -m pip install --index-url https://test.pypi.org/simple/ dataintegrityfi
 
 Run DIF GUI
 -----------
+
 ```
 python3 -m dataintegrityfingerprint.gui
 ```
+
 or if installed via pip:
+
 ```
 dataintegrityfingerprint -G
 ```
@@ -29,16 +33,20 @@ dataintegrityfingerprint -G
 
 DIF Command line interface
 --------------------------
+
 ```
 python3 -m dataintegrityfingerprint.cli
 ```
+
 or if installed via pip:
+
 ```
 dataintegrityfingerprint.cli
 ```
 
 DIF Python library
 -------------------
+
 ```
 from dataintegrityfingerprint import DataIntegrityFingerprint
 dif = DataIntegrityFingerprint("/home/me/Downloads")

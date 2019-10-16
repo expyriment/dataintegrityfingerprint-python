@@ -37,7 +37,6 @@ def get_version(package):
 
 
 if __name__ == '__main__':
-    print(readme())
     setup(
         name = package_name,
         version=get_version(package_name),
