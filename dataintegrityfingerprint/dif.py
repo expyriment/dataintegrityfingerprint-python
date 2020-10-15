@@ -30,7 +30,6 @@ class DataIntegrityFingerprint:
 
     CRYPTOGRAPHIC_ALGORITHMS = OpenSSLHashAlgorithm.SUPPORTED_ALGORITHMS
     NON_CRYPTOGRAPHIC_ALGORITHMS = ZlibHashAlgorithm.SUPPORTED_ALGORITHMS
-    SEPARATOR = "_"
     CHECKSUM_FILENAME_SEPARATOR = "  "
 
     def __init__(self, data, from_checksums_file=False,
@@ -111,11 +110,7 @@ class DataIntegrityFingerprint:
         return rtn
 
     @property
-    def prefix(self):
-        return "".join(x for x in self.hash_algorithm.lower() if x.isalnum())
-
-    @property
-    def postfix(self):
+    def dif(self):
         if len(self.file_hash_list) < 1:
             return None
 
@@ -124,14 +119,8 @@ class DataIntegrityFingerprint:
         hasher.update(self.checksums.encode("utf-8"))
         return hasher.checksum
 
-    @property
-    def dif(self):
-        if self.postfix is not None:
-            return self.prefix + self.SEPARATOR + self.postfix
-
     def count_files(self):
-        """Returns the number of files that are included in the dif
-        """
+        """Return the number of files that are included in the dif."""
 
         return len(self.get_files())
 
