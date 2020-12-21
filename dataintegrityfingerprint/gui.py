@@ -211,7 +211,7 @@ Florian Krause <florian@expyriment.org>
             self.unblock_gui(enable_save_checksums=False)
 
     def set_dif_label(self, *args):
-        self.dif_label.config(text="DIF ({0}):".format(
+        self.dif_label.config(text="DIF [{0}]:".format(
             self.algorithm_var.get()))
 
     def block_gui(self):
