@@ -104,7 +104,7 @@ class DataIntegrityFingerprint:
     @property
     def checksums(self):
         rtn = ""
-        for h, fl in self.file_hash_list:
+        for h, fl in sorted(self.file_hash_list, key=lambda x: x[1]):
             rtn += u"{0}{1}{2}\n".format(h, self.CHECKSUM_FILENAME_SEPARATOR,
                                          fl)
         return rtn
@@ -116,7 +116,8 @@ class DataIntegrityFingerprint:
 
         hasher = new_hash_instance(self._hash_algorithm,
                                    self.allow_non_cryptographic_algorithms)
-        hasher.update(self.checksums.encode("utf-8"))
+        concat = "".join(["".join(x) for x in self.file_hash_list])
+        hasher.update(concat.encode("utf-8"))
         return hasher.checksum
 
     def count_files(self):
