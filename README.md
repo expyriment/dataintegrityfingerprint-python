@@ -1,19 +1,20 @@
-Data Integrity Fingerprint (DIF)
-================================
+Data Integrity Fingerprint (Python implementation)
+===================================================
 
 *Released under the MIT License*
 
 Oliver Lindemann (oliver@expyriment.org) & Florian Krause (florian@expyriment.org)
 
-Project homepage: https://github.com/expyriment/dataintegrityfingerprint-python
-General Documentation: http://expyriment.github.io/DIF
+Documentation Data Integrity Fingerprint: http://expyriment.github.io/DIF
+
+Python implementation: https://github.com/expyriment/dataintegrityfingerprint-python
 
 
 Install
 -------
 
 ```
-python3 -m pip install --index-url https://test.pypi.org/simple/ dataintegrityfingerprint
+python -m pip install --index-url https://test.pypi.org/simple/ dataintegrityfingerprint
 ```
 
 
@@ -21,7 +22,7 @@ Run DIF GUI
 -----------
 
 ```
-python3 -m dataintegrityfingerprint.gui
+python -m dataintegrityfingerprint.gui
 ```
 
 or if installed via pip:
@@ -35,7 +36,7 @@ DIF Command line interface
 --------------------------
 
 ```
-python3 -m dataintegrityfingerprint.cli
+python -m dataintegrityfingerprint.cli
 ```
 
 or if installed via pip:
