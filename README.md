@@ -22,7 +22,7 @@ Run DIF GUI
 -----------
 
 ```
-python -m dataintegrityfingerprint.gui
+python -m dataintegrityfingerprint -G
 ```
 
 or if installed via pip:
@@ -36,13 +36,13 @@ DIF Command line interface
 --------------------------
 
 ```
-python -m dataintegrityfingerprint.cli
+python -m dataintegrityfingerprint
 ```
 
 or if installed via pip:
 
 ```
-dataintegrityfingerprint.cli
+dataintegrityfingerprint
 ```
 
 DIF Python library

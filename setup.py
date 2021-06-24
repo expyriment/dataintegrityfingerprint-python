@@ -9,8 +9,12 @@ import os
 from sys import version_info as _vi
 
 package_name = "dataintegrityfingerprint"
+application_name = package_name
 
 install_requires = []
+
+entry_points = {'console_scripts':
+                ['{}={}.__main__:run'.format(application_name, package_name)]}
 
 if _vi.major< 1:
     raise RuntimeError("{0} requires Python 3 or larger.".format(package_name))
@@ -49,9 +53,7 @@ if __name__ == '__main__':
         include_package_data=True,
         setup_requires=[],
         install_requires=install_requires,
-        entry_points={
-            'console_scripts': ['dataintegrityfingerprint={0}.cli:run'.format(package_name)],
-            },
+        entry_points=entry_points,
         keywords = "", #ToDo
         classifiers=[ #ToDO
             "Intended Audience :: Education",

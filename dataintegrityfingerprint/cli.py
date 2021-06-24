@@ -6,7 +6,7 @@ from . import DataIntegrityFingerprint
 from . import __version__
 
 
-def run():
+def cli():
 
     def progress(count, total, status=''):
         bar_len = 50
@@ -74,6 +74,7 @@ Florian Krause <florian@expyriment.org""")
                              "(Not suggested, please read documentation " +
                              "carefully!)",
                         default=False)
+
     args = vars(parser.parse_args())
 
     if args['listalgos']:
@@ -92,7 +93,7 @@ Florian Krause <florian@expyriment.org""")
         sys.exit()
 
     if args["PATH"] is None:
-        print("Use -h for help")
+        print("Use -G to launch the GUI interface or -h for help.")
         sys.exit()
 
     dif = DataIntegrityFingerprint(
@@ -136,7 +137,3 @@ Florian Krause <florian@expyriment.org""")
         print("Files: {0} included".format(dif.count_files()))
         print("Algorithm: {0}".format(dif.hash_algorithm))
         print("DIF: {}".format(dif))
-
-
-if __name__ == "__main__":
-    run()

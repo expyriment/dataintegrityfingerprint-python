@@ -1,7 +1,7 @@
 __author__ = 'Oliver Lindemann <oliver@expyriment.org>, ' \
              'Florian Krause <florian@expyriment.org>'
 
-__version__ = '0.6.0'
+__version__ = '0.6.1'
 
 from sys import version_info as _vi
 if _vi.major< 3:
