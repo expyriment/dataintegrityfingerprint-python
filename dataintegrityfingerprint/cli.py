@@ -5,6 +5,7 @@ import argparse
 from . import DataIntegrityFingerprint
 from . import __version__
 
+
 def run():
 
     def progress(count, total, status=''):
@@ -16,15 +17,19 @@ def run():
         sys.stdout.flush()
 
     parser = argparse.ArgumentParser(
-        description="Create a Data Integrity Fingerprint (DIF). v{0}".format(
-        __version__),
-        epilog="(c) O. Lindemann & F. Krause")
+        description="""Data Integrity Fingerprint (DIF)
+Python Reference Implementation v{0}""".format(__version__),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Authors:
+Oliver Lindemann <oliver@expyriment.org>
+Florian Krause <florian@expyriment.org""")
 
     parser.add_argument("PATH", nargs='?', default=None,
                         help="the path to the data folder or file")
-    parser.add_argument("-f", "--from-checksums-file", dest="fromchecksumsfile",
-                        action="store_true",
-                        help="Calculate dif from checksums file. PATH is a checksums file",
+    parser.add_argument("-f", "--from-checksums-file",
+                        dest="fromchecksumsfile", action="store_true",
+                        help="Calculate dif from checksums file. " +
+                             "PATH is a checksums file",
                         default=False)
     parser.add_argument("-a", "--algorithm", metavar="ALGORITHM",
                         type=str,
@@ -46,13 +51,14 @@ def run():
                         action="store_true",
                         help="print available algorithms",
                         default=False)
-    parser.add_argument("-s", "--save-checksums-file", dest="savechecksumsfile",
-                        action="store_true",
+    parser.add_argument("-s", "--save-checksums-file",
+                        dest="savechecksumsfile", action="store_true",
                         help="save checksums to file",
                         default=False)
     parser.add_argument("-d", "--diff-checksums-file", metavar="CHECKSUMSFILE",
                         type=str,
-                        help="Calculate differences of checksums file to CHECKSUMSFILE")
+                        help="Calculate differences of checksums file to " +
+                             "CHECKSUMSFILE")
     parser.add_argument("-n", "--no-multi-processing", dest="nomultiprocess",
                         action="store_true",
                         help="switch of multi processing",
@@ -64,10 +70,10 @@ def run():
     parser.add_argument("--non-crypthographic",
                         dest="noncrypto",
                         action="store_true",
-                        help="allow non crypthographic algorithms (Not suggested, please " +
-                             "read documentation carefully!) ",
+                        help="allow non crypthographic algorithms " +
+                             "(Not suggested, please read documentation " +
+                             "carefully!)",
                         default=False)
-
     args = vars(parser.parse_args())
 
     if args['listalgos']:
@@ -100,7 +106,7 @@ def run():
         dif.generate(progress=progress)
         print("")
 
-    #output
+    # Output
     if args['savechecksumsfile']:
         outfile = os.path.split(
             dif.data)[-1] + ".{0}".format(dif._hash_algorithm)
@@ -124,14 +130,12 @@ def run():
     elif args['checksums']:
         print(dif.checksums.strip())
     else:
-        print("Data Integrity Fingerprint (DIF) v{0}".format(__version__))
-
-        print("\nFolder: {0}".format(dif.data))
+        print("Data Integrity Fingerprint (DIF)".format(__version__))
+        print("")
+        print("Folder: {0}".format(dif.data))
         print("Files: {0} included".format(dif.count_files()))
         print("Algorithm: {0}".format(dif.hash_algorithm))
         print("DIF: {}".format(dif))
-
-
 
 
 if __name__ == "__main__":

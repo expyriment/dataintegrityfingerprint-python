@@ -17,6 +17,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import filedialog, messagebox
 
+from . import __version__
 from .dif import DataIntegrityFingerprint as DIF
 from .dif import new_hash_instance
 
@@ -30,13 +31,12 @@ class App(ttk.Frame):
         self.master = master
         self.master.title("Data Integrity Fingerprint (DIF)")
         self.about_text = """Data Integrity Fingerprint (DIF)
-
-Reference Python implementation
+Reference Python implementation v{0}
 
 Authors:
 Oliver Lindemann <oliver@expyriment.org>
 Florian Krause <florian@expyriment.org>
-"""
+""".format(__version__)
         self.dif = None
         self.create_widgets()
         self.dir_button.focus()
@@ -88,6 +88,7 @@ Florian Krause <florian@expyriment.org>
         self.algorithm_menu = tk.Menu(self.menubar)
         self.algorithm_var = tk.StringVar()
         self.algorithm_var.set("SHA-256")
+        self.algorithm_var.trace('w', self.set_dif_label)
         for algorithm in DIF.CRYPTOGRAPHIC_ALGORITHMS:
             self.algorithm_menu.add_radiobutton(label=algorithm,
                                                 value=algorithm,
@@ -172,8 +173,9 @@ Florian Krause <florian@expyriment.org>
         self.frame2 = ttk.Frame(self.master)
         self.frame2.grid(row=3, column=0, sticky="NSWE")
         self.frame2.grid_columnconfigure(1, weight=1)
-        self.dif_label = ttk.Label(self.frame2, text="DIF:")
+        self.dif_label = ttk.Label(self.frame2)
         self.dif_label.grid(row=0, column=0)
+        self.set_dif_label()
         self.dif_var = tk.StringVar()
         self.dif_var.set("")
         self.dif_entry = ttk.Entry(self.frame2, textvariable=self.dif_var,
@@ -207,6 +209,10 @@ Florian Krause <florian@expyriment.org>
             self.dif = None
             self.statusbar["text"] = "Ready"
             self.unblock_gui(enable_save_checksums=False)
+
+    def set_dif_label(self, *args):
+        self.dif_label.config(text="DIF [{0}]:".format(
+            self.algorithm_var.get()))
 
     def block_gui(self):
         """Block GUI from user entry."""
@@ -266,6 +272,7 @@ Florian Krause <florian@expyriment.org>
         self.checksum_list.insert(1.0, self.dif.checksums.strip("\n"))
         self.checksum_list["state"] = tk.DISABLED
         self.dif_var.set(self.dif.dif)
+        self.set_dif_label()
         self.copy_button["state"] = tk.NORMAL
         self.copy_button.focus()
         self.statusbar["text"] = "Done"
@@ -304,6 +311,7 @@ Florian Krause <florian@expyriment.org>
                 self.checksum_list.delete(1.0, tk.END)
                 self.checksum_list.insert(1.0, checksums)
                 self.checksum_list["state"] = tk.DISABLED
+                self.set_dif_label()
                 self.dif_var.set(master_hash)
                 self.copy_button["state"] = tk.NORMAL
                 self.copy_button.focus()
@@ -322,7 +330,7 @@ Florian Krause <florian@expyriment.org>
         """Save checksums file."""
 
         if self.checksum_list.get(1.0, tk.END).strip("\n") != "":
-            algorithm = self.dif_var.get().split(DIF.SEPARATOR)[0]
+            algorithm = self.algorithm_var.get()
             extension = "".join(x for x in algorithm.lower() if x.isalnum())
             filename = filedialog.asksaveasfilename(
                 defaultextension=extension,
