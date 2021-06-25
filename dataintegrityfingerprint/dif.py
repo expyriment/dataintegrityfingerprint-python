@@ -125,9 +125,6 @@ class DataIntegrityFingerprint:
 
         return len(self.get_files())
 
-    def _sort_hash_list(self):
-        self._hash_list = sorted(self._hash_list, key=lambda x: x[0] + x[1])
-
     def generate(self, progress=None):
         """Generate the Data Integrity Fingerprint.
 
@@ -166,7 +163,7 @@ class DataIntegrityFingerprint:
                 fl = os.path.relpath(rtn[1], self.data).replace(os.path.sep,"/")
                 self._hash_list.append((rtn[0], fl))
 
-        self._sort_hash_list()
+        self._hash_list = sorted(self._hash_list, key=lambda x: x[0] + x[1])
 
     def save_checksums(self, filename=None):
         """Save the checksums to a file.
