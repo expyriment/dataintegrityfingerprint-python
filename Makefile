@@ -6,9 +6,13 @@ build:
 install:
 	python3 setup.py install
 
-publish:
+publish_test:
 	twine check dist/*
 	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
+publish:
+	twine check dist/*
+	twine upload dist/*
 
 clean:
 		@rm -rf build \

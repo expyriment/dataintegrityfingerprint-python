@@ -6,18 +6,13 @@ Installer
 from setuptools import setup
 import codecs
 import os
-from sys import version_info as _vi
+from dataintegrityfingerprint import PACKAGE_NAME
 
-package_name = "dataintegrityfingerprint"
-application_name = package_name
-
+application_name = PACKAGE_NAME
 install_requires = []
-
 entry_points = {'console_scripts':
-                ['{}={}.__main__:run'.format(application_name, package_name)]}
-
-if _vi.major< 1:
-    raise RuntimeError("{0} requires Python 3 or larger.".format(package_name))
+                ['{}={}.__main__:run'.format(application_name, PACKAGE_NAME)]}
+repository = "https://github.com/expyriment/dataintegrityfingerprint-python"
 
 def readme():
     directory = os.path.dirname(os.path.join(
@@ -29,6 +24,7 @@ def readme():
         errors="replace",
         ) as file:
         return file.read()
+
 
 def get_version(package):
     """Get version number"""
@@ -42,15 +38,15 @@ def get_version(package):
 
 if __name__ == '__main__':
     setup(
-        name = package_name,
-        version=get_version(package_name),
+        name = PACKAGE_NAME,
+        version=get_version(PACKAGE_NAME),
         description='Create a Data Integrity Fingerprint',
-        author='Florian Krause, Oliver Lindemann',
+        author='Oliver Lindemann, Florian Krause',
         author_email='oliver@expyriment.org, florian@expyriment.org',
         license='MIT Licence',
-        url='http://expyriment.github.io/DIF',
-        packages=[package_name],
-        include_package_data=True,
+        url=repository,
+        packages=[PACKAGE_NAME],
+        include_package_data=False,
         setup_requires=[],
         install_requires=install_requires,
         entry_points=entry_points,
