@@ -5,16 +5,18 @@ Data Integrity Fingerprint (Python implementation)
 
 Oliver Lindemann (oliver@expyriment.org) & Florian Krause (florian@expyriment.org)
 
+---
+
 Documentation Data Integrity Fingerprint: http://expyriment.github.io/DIF
 
-Python implementation: https://github.com/expyriment/dataintegrityfingerprint-python
+---
 
 
 Install
 -------
 
 ```
-python -m pip install --index-url https://test.pypi.org/simple/ dataintegrityfingerprint
+python -m pip install dataintegrityfingerprint
 ```
 
 
