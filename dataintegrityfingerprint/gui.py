@@ -186,6 +186,8 @@ Florian Krause <florian@expyriment.org>
                                       command=self.copy_dif_to_clipboard,
                                       state=tk.DISABLED)
         self.copy_button.grid(row=0, column=2)
+        self.copy_button.bind("<Button-2>",
+                              lambda e: self.copy_dif_to_clipboard("badge"))
 
         # Status bar
         self.statusbar = ttk.Label(self.master, text="", border=1,
@@ -357,7 +359,14 @@ Florian Krause <florian@expyriment.org>
 
     def copy_dif_to_clipboard(self, *args):
         self.master.clipboard_clear()
-        self.master.clipboard_append(self.dif_var.get())
+        if "badge" in args and self.dif_var.get() != "":
+            label = "DIF [{0}]".format(self.algorithm_var.get().replace("-",
+                                                                        "--"))
+            self.master.clipboard_append(
+                "https://img.shields.io/badge/{0}-{1}-informational".format(
+                    label, self.dif_var.get()))
+        else:
+            self.master.clipboard_append(self.dif_var.get())
 
 
 class DiffDialogue:
