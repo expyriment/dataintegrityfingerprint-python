@@ -1,14 +1,14 @@
-DIF Reference Implementation in Python  
-======================================
+Data Integrity Fingerprint (DIF)
+================================
 
 ![GitHub](https://img.shields.io/pypi/l/dataintegrityfingerprint?style=flat)
 [![PyPI](https://img.shields.io/pypi/v/dataintegrityfingerprint?style=flat)](https://pypi.org/project/dataintegrityfingerprint/)
 
-**Data Integrity Fingerprints (DIF)**
-* **GUI and command line tool**
-* **Python library**
+**Reference Python implementation**
+* GUI and command line tool
+* Python library
 
-Documentation Data Integrity Fingerprint: http://expyriment.github.io/DIF
+Data Integrity Fingerprint (DIF) specification: https://github.com/expyriment/DIF
 
 ---
 
