@@ -5,8 +5,8 @@ Data Integrity Fingerprint (DIF)
 [![PyPI](https://img.shields.io/pypi/v/dataintegrityfingerprint?style=flat)](https://pypi.org/project/dataintegrityfingerprint/)
 
 **Reference Python implementation**
-* GUI and command line tool
-* Python library
+* Application (command line and graphical user interface)
+* Programming library
 
 Data Integrity Fingerprint (DIF) specification: https://github.com/expyriment/DIF
 
@@ -26,36 +26,27 @@ Oliver Lindemann (oliver@expyriment.org) & Florian Krause (florian@expyriment.or
 python -m pip install dataintegrityfingerprint
 ```
 
-## Usage DIF tools
-### GUI
+## Usage
+### Application
 
 ```
-python -m dataintegrityfingerprint -G
-```
-
-or if installed via pip:
-
-```
-dataintegrityfingerprint -G
-```
-
-
-### Command line interface
-
-```
-python -m dataintegrityfingerprint
+python -m dataintegrityfingerprint     # Command line interface
+python -m dataintegrityfingerprint -G  # Graphical user interface
 ```
 
 or if installed via pip:
 
 ```
-dataintegrityfingerprint
+dataintegrityfingerprint     # Command line interface
+dataintegrityfingerprint -G  # Graphical user interface
 ```
 
-## DIF Python library
 
-```
+### Programming library
+
+```python3
 from dataintegrityfingerprint import DataIntegrityFingerprint
+
 dif = DataIntegrityFingerprint("/home/me/Downloads")
 print(dif)
 print(dif.checksums)
