@@ -45,7 +45,7 @@ class AllAlgorithmsTestCase(unittest.TestCase):
         for dif in self.difs:
             with self.subTest(data=dif.data, algorithm=dif.hash_algorithm):
                 tmp_file, tmp_filename = tempfile.mkstemp()
-                tmp_file.close()
+                os.close(tmp_file)
                 dif.save_checksums(tmp_filename)
                 self.tmp_filenames.append(tmp_filename)
                 extension = "".join(
@@ -110,7 +110,7 @@ class AllAlgorithmsFromChecksumsFileTestCase(unittest.TestCase):
         for dif in self.difs:
             with self.subTest(data=dif.data, algorithm=dif.hash_algorithm):
                 tmp_file, tmp_filename = tempfile.mkstemp()
-                tmp_file.close()
+                os.close(tmp_file)
                 dif.save_checksums(tmp_filename)
                 self.tmp_filenames.append(tmp_filename)
                 extension = "".join(
