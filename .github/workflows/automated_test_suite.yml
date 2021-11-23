@@ -33,7 +33,7 @@ jobs:
       - name: Build and install
         run: |
           python -m build
-          pip install dist/*.whl
+          pip install --no-index --find-links dist/ dataintegrityfingerprint
       - name: Run tests
         run: |
           cd tests
