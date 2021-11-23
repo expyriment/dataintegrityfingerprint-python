@@ -8,31 +8,31 @@ on:
     branches:
       - tests
 
-  jobs:
-    build:
-      runs-on: ${{ matrix.os }}
-      strategy:
-        matrix:
-          os: [ubuntu-latest, macos-latest, windows-latest]
-          python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
-      steps:
-        - name: Check out repository
-          uses: actions/checkout@v2
-          with:
-            submodules: recursive
-        - name: Set up Python
-          uses: actions/setup-python@v2
-          with:
-            python-version: ${{ matrix.python-version }}
-        - name: Install dependencies
-          run: |
-            python -m pip install -U pip
-            pip install setuptools wheel build
-        - name: Build and install
-          run: |
-            python -m build
-            pip install dist/*.whl
-        - name: Run tests
-          run: |
-            cd tests
-            python -m unittest -v
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip
+          pip install setuptools wheel build
+      - name: Build and install
+        run: |
+          python -m build
+          pip install dist/*.whl
+      - name: Run tests
+        run: |
+          cd tests
+          python -m unittest -v
