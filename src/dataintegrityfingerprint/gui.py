@@ -1,14 +1,11 @@
-"""Data Integrity Fingerprint GUI.
+"""Data Intergrity Fingerprint (DIF) graphical user interface.
 
-A GUI for the Data Integrity Fingerprint (DIF) Python reference implementation.
+Invoke with `python3 -m dataintegrityfingerprint.gui` or
+`dataintegrityfingerprint -G`.
 
 """
 
-__author__ = 'Oliver Lindemann <oliver@expyriment.org>, ' +\
-             'Florian Krause <florian@expyriment.org>'
 
-
-import os
 import platform
 import multiprocessing
 from threading import Thread
