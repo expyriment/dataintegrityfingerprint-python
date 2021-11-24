@@ -33,27 +33,53 @@ python -m pip install dataintegrityfingerprint
 
 ## Usage
 ### Application
-To start the command line intercae, run
+After successfull installation, the command line interface is available as `dataintegrityfingerprint`:
 
 ```
-dataintegrityfingerprint
-```
-Appending `-h` to the command will
+dataintegrityfingerprint [-h] [-f] [-a ALGORITHM] [-C] [-D] [-G] [-L] [-s]
+                         [-d CHECKSUMSFILE] [-n] [-p] [--non-cryptographic]
+                         [PATH]
+                         
+positional arguments:
+  PATH                  the path to the data directory
 
-To start the graphical user interface, run
+options:
+  -h, --help            show this help message and exit
+  -f, --from-checksums-file
+                        Calculate dif from checksums file. PATH is a checksums
+                        file
+  -a ALGORITHM, --algorithm ALGORITHM
+                        the hash algorithm to be used (default=SHA-256)
+  -C, --checksums       print checksums only
+  -D, --dif-only        print dif only
+  -G, --gui             open graphical user interface
+  -L, --list-available-algorithms
+                        print available algorithms
+  -s, --save-checksums-file
+                        save checksums to file
+  -d CHECKSUMSFILE, --diff-checksums-file CHECKSUMSFILE
+                        Calculate differences of checksums to CHECKSUMSFILE
+  -n, --no-multi-processing
+                        switch of multi processing
+  -p, --progress        show progressbar
+  --non-cryptographic   allow non cryptographic algorithms (Not suggested,
+                        please read documentation carefully!)
 
 ```
-dataintegrityfingerprint-gui
-```
+
+Alternatively, the graphical user interface is available as `dataintegrityfingerprint-gui`:
+
+![image](https://user-images.githubusercontent.com/2971539/143326083-99d839a9-e653-4508-a549-edf001faa6f7.png)
+
 
 ### Programming library
-In order to use the Python library, import it in your code with
+After successful installation, the Python package is available as `dataintegrityfingerprint`:
 
 ```python3
 import dataintegrityfingerprint
 ```
 
-The library exposes a class `DataIntegrityFingerprint` which can be used to instanciate a DIF object:
+It contains the class `DataIntegrityFingerprint` which can be used to instantiate a DIF object:
 
 ```python3
 dif = dataintegrityfingerprint.DataIntegrityFingerprint("/home/me/Downloads")
@@ -61,4 +87,4 @@ print(dif)
 print(dif.checksums)
 ```
 
-The code uses docstrings for documentation. Use `help(dataintegrityfingerprint.DataIntegrityFingerprint)` for information on what this class can do and how to use it.
+The code is self-documented using docstrings. Use `help(dataintegrityfingerprint.DataIntegrityFingerprint)` for information on what this class can do and how to use it.
