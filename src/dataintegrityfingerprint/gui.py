@@ -6,6 +6,7 @@ Invoke with `python3 -m dataintegrityfingerprint.gui` or
 """
 
 
+import os
 import platform
 import multiprocessing
 from threading import Thread
