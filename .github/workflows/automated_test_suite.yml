@@ -3,10 +3,12 @@ name: Automated test suite
 on:
   push:
     branches:
-      - tests
+      - master
+      - tests  # remove after merging into master
   pull_request:
     branches:
-      - tests
+      - master
+      - tests  # remove after merging into master
 
 jobs:
   build:
