@@ -135,7 +135,7 @@ Florian Krause <florian@expyriment.org>
         self.dir_entry = ttk.Entry(self.frame1, textvariable=self.dir_var,
                                    takefocus=0, state="readonly")
         self.dir_entry.grid(row=0, column=1, sticky="WE")
-        self.dir_button = ttk.Button(self.frame1, text="Browse",
+        self.dir_button = ttk.Button(self.frame1, text="Browse...",
                                      command=self.set_data_directory)
         self.dir_button.grid(row=0, column=2)
         self.generate_button = ttk.Button(

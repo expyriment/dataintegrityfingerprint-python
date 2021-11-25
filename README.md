@@ -71,7 +71,7 @@ Alternatively, the graphical user interface is available as `dataintegrityfinger
 
 ![image](https://user-images.githubusercontent.com/2971539/143326083-99d839a9-e653-4508-a549-edf001faa6f7.png)
 
-* _Button "Browse"_ - Opens a file browser for selecting a data directory.
+* _Button "Browse..."_ - Opens a file browser for selecting a data directory.
   The selected data directory will be shown at the top of the interface.
 * _Button "Generate DIF"_ - Generates the DIF for the selected data
   directory. The DIF will be shown at the bottom of the interface. In addition,
