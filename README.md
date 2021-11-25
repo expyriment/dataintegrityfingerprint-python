@@ -71,29 +71,29 @@ Alternatively, the graphical user interface is available as `dataintegrityfinger
 
 ![image](https://user-images.githubusercontent.com/2971539/143326083-99d839a9-e653-4508-a549-edf001faa6f7.png)
 
-* **Button "Browse"** - Opens a file browser for selecting a data directory.
+* _Button "Browse"_ - Opens a file browser for selecting a data directory.
   The selected data directory will be shown at the top of the interface.
-* **Button "Generate DIF"** - Generates the DIF for the selected data
+* _Button "Generate DIF"_ - Generates the DIF for the selected data
   directory. The DIF will be shown at the bottom of the interface. In addition,
   the main area in the middle of the interface will show the checksums
   (fingerprints) of individual files.
-* **Button "Copy"** - Copies the DIF into the clipboard for pasting into other
+* _Button "Copy"_ - Copies the DIF into the clipboard for pasting into other
   applications.
-* **Menu item "File --> Open checksums"** - Opens a checksums file. The DIF of
+* _Menu item "File --> Open checksums"_ - Opens a checksums file. The DIF of
   that checksums file will be shown at the bottom of the interface. In
   addition, the main area in the middle of the interface will show the
   checksums (fingerprints) of individual files.
-* **Menu item "File --> Save checksums"** - Saves the checksums (fingerprints)
+* _Menu item "File --> Save checksums"_ - Saves the checksums (fingerprints)
   of individual files to a file.
-* **Menu item "File --> Quit"** - Quits the application.
-* **Menu item "Edit --> Diff checksums"** - Opens a checksums file and shows
+* _Menu item "File --> Quit"_ - Quits the application.
+* _Menu item "Edit --> Diff checksums"_ - Opens a checksums file and shows
   differences of checksums (fingerprints) of individual files to those
   currently shown in the main area in the middle of the interface.
-* **Menu item "Options --> Hash algorithm"** - Selects the cryptographic hash
+* _Menu item "Options --> Hash algorithm"_ - Selects the cryptographic hash
   algorithm used as basis for DIF calculation.
-* **Menu item "Progress updating"** - Enables/disables progress updating via a
+* _Menu item "Progress updating"_ - Enables/disables progress updating via a
   progress bar.
-* **Menu item "Options --> Multi-core processing"** - Enables/disables parallel
+* _Menu item "Options --> Multi-core processing"_ - Enables/disables parallel
   computing (usage of multiple CPU cores).
   
   
