@@ -69,7 +69,7 @@ options:
 
 Alternatively, the graphical user interface is available as `dataintegrityfingerprint-gui`:
 
-![image](https://user-images.githubusercontent.com/2971539/143326083-99d839a9-e653-4508-a549-edf001faa6f7.png)
+![image](https://user-images.githubusercontent.com/2971539/143478538-6700a283-01db-4073-8692-2218d5a777c2.png)
 
 * _Button "Browse..."_ - Opens a file browser for selecting a data directory.
   The selected data directory will be shown at the top of the interface.
