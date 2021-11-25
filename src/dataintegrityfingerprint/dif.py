@@ -1,13 +1,9 @@
-"""
-Data Integrity Fingerprint
+"""Data Intergrity Fingerprint (DIF) programming library.
 
-This module is the Python reference implementation of the Data Integrity
-Fingerprint (DIF).
+Import as `dataintegrityfingerprint`.
 
 """
 
-__author__ = 'Oliver Lindemann <oliver@expyriment.org>, ' +\
-             'Florian Krause <florian@expyriment.org>'
 
 import os
 import codecs
@@ -68,24 +64,32 @@ class DataIntegrityFingerprint:
                               allow_non_cryptographic_algorithms)
         self._hash_algorithm = h.hash_algorithm
         self._data = os.path.abspath(data)
+        self._file_count = None
         self._hash_list = []
-        self.multiprocessing = multiprocessing
-        self.allow_non_cryptographic_algorithms = \
+        self._multiprocessing = multiprocessing
+        self._allow_non_cryptographic_algorithms = \
             allow_non_cryptographic_algorithms
 
     def __str__(self):
         return str(self.dif)
 
     def get_files(self):
-        # get all files to be hashed
+        """Get all files to hash.
+
+        Returns
+        -------
+        files : list
+            the list of files to hash
+
+        """
 
         rtn = []
         if os.path.isdir(self._data):
             for dir_, _, files in os.walk(self._data):
                 for filename in files:
                     rtn.append(os.path.join(dir_, filename))
+        self._file_count = len(rtn)
         return rtn
-
 
     @ property
     def hash_algorithm(self):
@@ -120,10 +124,19 @@ class DataIntegrityFingerprint:
         hasher.update(concat.encode("utf-8"))
         return hasher.checksum
 
-    def count_files(self):
-        """Return the number of files that are included in the dif."""
+    @property
+    def file_count(self):
+        if self._file_count is None:
+            self.get_files()
+        return self._file_count
 
-        return len(self.get_files())
+    @property
+    def multiprocessing(self):
+        return self._multiprocessing
+
+    @property
+    def allow_non_cryptographic_algorithms(self):
+        return self._allow_non_cryptographic_algorithms
 
     def generate(self, progress=None):
         """Generate hash list to get Data Integrity Fingerprint.
@@ -152,7 +165,8 @@ class DataIntegrityFingerprint:
             files = self.get_files()
             func_args = zip(files, [self._hash_algorithm] * len(files))
             if self.multiprocessing:
-                imap = multiprocessing.Pool().imap_unordered
+                pool = multiprocessing.Pool()
+                imap = pool.imap_unordered
             else:
                 imap = map
 
@@ -162,6 +176,9 @@ class DataIntegrityFingerprint:
                              "{0}/{1}".format(counter + 1, len(files)))
                 fl = os.path.relpath(rtn[1], self.data).replace(os.path.sep,"/")
                 hash_list.append((rtn[0], fl))
+
+            if self.multiprocessing:
+                pool.close()
 
         self._hash_list = sorted(hash_list, key=lambda x: x[0] + x[1])
 
@@ -208,8 +225,11 @@ class DataIntegrityFingerprint:
         """
 
         checksums = self.checksums.split("\n")
-        other = DataIntegrityFingerprint(filename, from_checksums_file=True,
-                                         hash_algorithm=self._hash_algorithm)
+        other = DataIntegrityFingerprint(
+            filename, from_checksums_file=True,
+            hash_algorithm=self._hash_algorithm,
+            allow_non_cryptographic_algorithms=\
+                self.allow_non_cryptographic_algorithms)
         checksums_other = other.checksums.split("\n")
         sub = ["- " + x for x in list(set(checksums_other) - set(checksums))]
         add = ["+ " + x for x in list(set(checksums) - set(checksums_other))]
@@ -250,9 +270,6 @@ def new_hash_instance(hash_algorithm,
         return OpenSSLHashAlgorithm(hash_algorithm)
     except Exception:
         pass
-
-    raise ValueError("{0} is not a supported hash algorithm.".format(
-        hash_algorithm))
 
 
 def _hash_file_content(args):

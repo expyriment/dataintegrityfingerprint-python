@@ -1,3 +1,11 @@
+"""Data Intergrity Fingerprint (DIF) command line interface.
+
+Invoke with `python3 -m dataintegrityfingerprint` or
+`dataintegrityfingerprint`.
+
+"""
+
+
 import os
 import sys
 import argparse
@@ -18,14 +26,14 @@ def cli():
 
     parser = argparse.ArgumentParser(
         description="""Data Integrity Fingerprint (DIF)
-Python Reference Implementation v{0}""".format(__version__),
+Reference Python implementation v{0}""".format(__version__),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Authors:
 Oliver Lindemann <oliver@expyriment.org>
 Florian Krause <florian@expyriment.org""")
 
     parser.add_argument("PATH", nargs='?', default=None,
-                        help="the path to the data folder or file")
+                        help="the path to the data directory")
     parser.add_argument("-f", "--from-checksums-file",
                         dest="fromchecksumsfile", action="store_true",
                         help="Calculate dif from checksums file. " +
@@ -33,7 +41,7 @@ Florian Krause <florian@expyriment.org""")
                         default=False)
     parser.add_argument("-a", "--algorithm", metavar="ALGORITHM",
                         type=str,
-                        help="the hash algorithm to be used (default=sha256)",
+                        help="the hash algorithm to be used (default=SHA-256)",
                         default="sha256")
     parser.add_argument("-C", "--checksums", dest="checksums",
                         action="store_true",
@@ -57,7 +65,7 @@ Florian Krause <florian@expyriment.org""")
                         default=False)
     parser.add_argument("-d", "--diff-checksums-file", metavar="CHECKSUMSFILE",
                         type=str,
-                        help="Calculate differences of checksums file to " +
+                        help="Calculate differences of checksums to " +
                              "CHECKSUMSFILE")
     parser.add_argument("-n", "--no-multi-processing", dest="nomultiprocess",
                         action="store_true",
@@ -67,10 +75,10 @@ Florian Krause <florian@expyriment.org""")
                         action="store_true",
                         help="show progressbar",
                         default=False)
-    parser.add_argument("--non-crypthographic",
+    parser.add_argument("--non-cryptographic",
                         dest="noncrypto",
                         action="store_true",
-                        help="allow non crypthographic algorithms " +
+                        help="allow non cryptographic algorithms " +
                              "(Not suggested, please read documentation " +
                              "carefully!)",
                         default=False)
@@ -78,11 +86,11 @@ Florian Krause <florian@expyriment.org""")
     args = vars(parser.parse_args())
 
     if args['listalgos']:
-        print("Crypothographic algorithms")
+        print("Crypotographic algorithms")
         print("- " + "\n- ".join(
             DataIntegrityFingerprint.CRYPTOGRAPHIC_ALGORITHMS))
         if args['noncrypto']:
-            print("Non-crypothographic algorithms")
+            print("Non-crypotographic algorithms")
             print("- " + "\n- ".join(
                 DataIntegrityFingerprint.NON_CRYPTOGRAPHIC_ALGORITHMS))
         sys.exit()
@@ -109,8 +117,9 @@ Florian Krause <florian@expyriment.org""")
 
     # Output
     if args['savechecksumsfile']:
-        outfile = os.path.split(
-            dif.data)[-1] + ".{0}".format(dif._hash_algorithm)
+        extension = "".join(
+            x for x in dif._hash_algorithm.lower() if x.isalnum())
+        outfile = os.path.split( dif.data)[-1] + ".{0}".format(extension)
         answer = "y"
         if os.path.exists(outfile):
             answer = input(
@@ -131,9 +140,10 @@ Florian Krause <florian@expyriment.org""")
     elif args['checksums']:
         print(dif.checksums.strip())
     else:
-        print("Data Integrity Fingerprint (DIF)".format(__version__))
+        print("Data Integrity Fingerprint (DIF)")
         print("")
-        print("Folder: {0}".format(dif.data))
-        print("Files: {0} included".format(dif.count_files()))
+        print("Directory: {0}".format(dif.data))
+        print("Files: {0}".format(dif.file_count))
         print("Algorithm: {0}".format(dif.hash_algorithm))
-        print("DIF: {}".format(dif))
+        print("")
+        print("DIF [{}]: {}".format(dif.hash_algorithm, dif))

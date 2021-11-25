@@ -1,12 +1,10 @@
-"""
-Hashing.
+"""OpenSSL hash algorithms.
 
-This module provides wrapper for openssl hash functions  
-to have a unique interface for all types of algorithms.
+This module provides a wrapper for OpenSSL hash functions to have a unique
+interface for all types of algorithms.
 
-Each hash algorithm object has the methods `update` and the
-properties `checksum` & `hash_algorithm`
-
+Each hash algorithm object has the methods `update` and the properties
+`checksum` & `hash_algorithm`
 
 """
 
@@ -72,6 +70,15 @@ class OpenSSLHashAlgorithm(object):
 
 
     def update(self, data):
+        """Update the hash.
+
+        Parameters
+        ----------
+        data : bytes
+            the data to update the hash with
+
+        """
+
         self._hasher.update(data)
 
     @property
