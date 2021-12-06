@@ -9,10 +9,10 @@ tags:
   - checksums
   - hash
 authors:
-  - name: Oliver Lindemann^[co-first author]
+  - name: Oliver Lindemann^[corresponding author]
     orcid: 0000-0003-3789-5373
     affiliation: 1
-  - name: Florian Krause^[co-first author]
+  - name: Florian Krause
     orcid: 0000-0002-2754-3692
     affiliation: "2, 3"
 affiliations:
@@ -54,14 +54,19 @@ Identifier; @Liu] that need to be maintained [@Lin].
 The DIF provides a simple solution to this problem wihtout relying on a third
 party by extending the concept of file verification to multi-file datasets
 (see also \autoref{fig:Fig1}):
+
 * The author of a journal article calculates checksums of all the files in the
   dataset the article relates to.
+  
 * From these checksums the author calculates a single "master checksum" (the
   DIF) that uniquly identifies the entire dataset.
+  
 * The author reports the DIF in the journal article
+*
 * A reader of the journal article who obtained a copy of the dataset (from
   either the author or any other source) calculates the DIF of their copy of
   the dataset and compares it to the correct DIF as stated in the article.
+  
 * If the list of checksums of individual files in the original dataset is
   available, the author can furthermore investigate in detail the differences
   between the datasets, in case of a DIF mismatch.
