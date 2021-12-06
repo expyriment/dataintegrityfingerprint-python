@@ -44,12 +44,13 @@ differences in case a DIF could not be verified.
 # Statement of need
 
 In recent years, publicly sharing scientific datasets has become good research
-practice [@Wilkinson] and the concept of _open data_ has been incorporated
+practice [@Wilkinson] and the concept of _Open Data_ has been incorporated
 into international policies [@EU]. However, there currently seems to be no good
 way to unmistakenly and indefinitely link these datasets to a corresponding
-journal publication, without relying on storage providers (e.g. GitHub, Dryad,
-Open Science Framework; [@Tan]) or other services (e.g. Digital Object
-Identifier; @Liu) that need to be maintained [@Lin].
+journal publication, without relying on storage providers [e.g. GitHub, Dryad,
+Open Science Framework; @Tan]) or other services [e.g. Digital Object
+Identifier; @Liu] that need to be maintained [@Lin].
+
 The DIF provides a simple solution to this problem wihtout relying on a third
 party by extending the concept of file verification to multi-file datasets
 (see also \autoref{fig:Fig1}):
@@ -63,11 +64,14 @@ correct DIF as stated in the article. If the list of checksums of individual
 files in the original dataset is available, the author can furthermore
 investigate in detail the differences between the datasets, in case of a DIF
 mismatch.
+
+![Schematic overview of verifying the integrity of a dataset using the DIF.\label{fig:Fig1}](https://user-images.githubusercontent.com/2971539/143914028-ea2b8570-6db4-4f82-9bec-b1770fda7df8.png)
+
 Notably, previous efforts to solve this problem outside of the scientific
 domain suffer from several shortcomings. Their implementations are either not
 available cross-platform (i.e. Windows, MacOS, Linux) [@DirHash], lack a
 command line [@checksum; @Dirtools] or graphical [@checksumdir; @hashdir;
-@checksum; @dirtools; @DirHash; @dirhash-python; @filehash] user interface, or
+@checksum; @Dirtools; @DirHash; @dirhash-python; @filehash] user interface, or
 are not meant to be used as a programming library [@checksum]. The here
 presented software offers all of these features.
 More importantly, however, previous efforts are incompatible with each other,
@@ -85,8 +89,6 @@ hash function chosen to base all calculations on. While we recommend to
 use SHA-256, having a algorithm-independent DIF is crucial for being able to
 adapt to future developments in the domain of cryptography and computer
 security.
-
-![Overview of verifying the integrity of a dataset.\label{fig:Fig1}](https://user-images.githubusercontent.com/2971539/143914028-ea2b8570-6db4-4f82-9bec-b1770fda7df8.png)
 
 # Specification
 
