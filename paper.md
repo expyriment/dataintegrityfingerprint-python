@@ -29,7 +29,7 @@ bibliography: paper.bib
 
 # Summary
 
-We here present the reference implementation of the
+We here present the Python reference implementation of the
 _Data Integrity Fingerprint [DIF; @DIF]_ - a proposal for a human-readable
 fingerprint of scientific datasets [@DIF]. The software can be used via
 the command line, via a graphical user interface, or as a Python library for
@@ -62,7 +62,7 @@ party by extending the concept of file verification to multi-file datasets
   DIF) that uniquly identifies the entire dataset.
   
 * The author reports the DIF in the journal article
-*
+
 * A reader of the journal article who obtained a copy of the dataset (from
   either the author or any other source) calculates the DIF of their copy of
   the dataset and compares it to the correct DIF as stated in the article.
