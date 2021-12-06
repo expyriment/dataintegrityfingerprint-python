@@ -75,7 +75,7 @@ party by extending the concept of file verification to multi-file datasets
 
 Notably, previous efforts to solve this problem outside of the scientific
 domain suffer from several shortcomings. Their implementations are either not
-available cross-platform (i.e. Windows, MacOS, Linux) [@DirHash], lack a
+available cross-platform [i.e. Windows, MacOS, Linux; @DirHash], lack a
 command line [@checksum; @Dirtools] or graphical [@checksumdir; @hashdir;
 @checksum; @Dirtools; @DirHash; @dirhash-python; @filehash] user interface, or
 are not meant to be used as a programming library [@checksum]. The here
