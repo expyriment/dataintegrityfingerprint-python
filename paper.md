@@ -31,7 +31,7 @@ bibliography: paper.bib
 
 We here present the reference implementation of the
 _Data Integrity Fingerprint (DIF)_ - a proposal for a human-readable
-fingerprint of scientific datasets [@DIF:2021]. The software can be used via
+fingerprint of scientific datasets [@DIF]. The software can be used via
 the command line, via a graphical user interface, or as a Python library for
 embedding in other software. In either case, the user has the choice of
 calculating the DIF based on a variety of (cryptographic) algorithms using
@@ -46,12 +46,12 @@ differences in case a DIF could not be verified.
 # Statement of need
 
 In recent years, publicly sharing scientific datasets has become good research
-practice [@Wilkinson:2016] and the concept of _open data_ has been incorporated
+practice [@Wilkinson] and the concept of _open data_ has been incorporated
 into international policies [@EU]. However, there currently seems to be no good
 way to unmistakenly and indefinitely link these datasets to a corresponding
 journal publication, without relying on storage providers (e.g. GitHub, Dryad,
-Open Science Framework) [@Tan:2020] or other services (e.g. Digital Object
-Identifier) [@Liu:2021] that need to be maintained [@Lin:2020].
+Open Science Framework) [@Tan] or other services (e.g. Digital Object
+Identifier) [@Liu] that need to be maintained [@Lin].
 The DIF provides a simple solution to this problem wihtout relying on a third
 party by extending the concept of file verification to multi-file datasets
 (see also \autoref{fig:Fig1}):
