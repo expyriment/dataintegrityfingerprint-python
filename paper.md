@@ -41,8 +41,6 @@ can be created. These files can also serve as the basis for calculating the DIF
 and, in addition, can be compared against a dataset in order to reveal content
 differences in case a DIF could not be verified.
 
-![Overview of verifying the integrity of a dataset.\label{fig:Fig1}](https://user-images.githubusercontent.com/2971539/143914028-ea2b8570-6db4-4f82-9bec-b1770fda7df8.png)
-
 # Statement of need
 
 In recent years, publicly sharing scientific datasets has become good research
@@ -50,8 +48,8 @@ practice [@Wilkinson] and the concept of _open data_ has been incorporated
 into international policies [@EU]. However, there currently seems to be no good
 way to unmistakenly and indefinitely link these datasets to a corresponding
 journal publication, without relying on storage providers (e.g. GitHub, Dryad,
-Open Science Framework) [@Tan] or other services (e.g. Digital Object
-Identifier) [@Liu] that need to be maintained [@Lin].
+Open Science Framework; [@Tan]) or other services (e.g. Digital Object
+Identifier; @Liu) that need to be maintained [@Lin].
 The DIF provides a simple solution to this problem wihtout relying on a third
 party by extending the concept of file verification to multi-file datasets
 (see also \autoref{fig:Fig1}):
@@ -87,6 +85,8 @@ hash function chosen to base all calculations on. While we recommend to
 use SHA-256, having a algorithm-independent DIF is crucial for being able to
 adapt to future developments in the domain of cryptography and computer
 security.
+
+![Overview of verifying the integrity of a dataset.\label{fig:Fig1}](https://user-images.githubusercontent.com/2971539/143914028-ea2b8570-6db4-4f82-9bec-b1770fda7df8.png)
 
 # Specification
 
