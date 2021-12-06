@@ -2,11 +2,10 @@
 title: 'Data Integrity Fingerprint (DIF) - Reference Python implementation'
 tags:
   - Python
+  - Open Data
   - datasets
-  - open data
-  - research data
   - data integrity
-  - checksums
+  - checksum
   - hash
 authors:
   - name: Oliver Lindemann^[corresponding author]
