@@ -34,7 +34,7 @@ Fingerprint (DIF)_ - a proposal for a human-readable fingerprint of scientific
 datasets [@DIF]. The software can be used via the command line, via a graphical
 user interface, or as a Python library for embedding in other software. In
 either case, the user has the choice of calculating the DIF based on a variety
-of (cryptographic) algorithms using serial (single CPU core) or parallel
+of (cryptographic) hash algorithms using serial (single CPU core) or parallel
 (multiple CPU cores) computing. In addition, a checksums file with fingerprints
 of individual files in a dataset can be created. These files can also serve as
 the basis for calculating the DIF and, in addition, can be compared against a
@@ -91,7 +91,7 @@ amount of degrees of freedom (and potential error) are not a good fit for a
 scientific application, and is at odds with our goal of a simple human-readable
 fingerprint that can be printed in a journal article.
 The DIF, on the other hand, has only a single degree of freedom, which is the
-hash function chosen to base all calculations on. While we recommend to
+hash algorithm chosen to base all calculations on. While we recommend to
 use SHA-256, having a algorithm-independent DIF is crucial for being able to
 adapt to future developments in the domain of cryptography and computer
 security.
