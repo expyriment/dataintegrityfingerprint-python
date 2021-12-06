@@ -98,7 +98,7 @@ security.
 
 # Specification
 
-Procedure for calculating the DIF:
+The procedure for calculating the DIF is:
 
 1. Choose a (cryptographic) hash function `Hash` (e.g. SHA-256)
 
