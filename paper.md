@@ -29,17 +29,17 @@ bibliography: paper.bib
 
 # Summary
 
-We here present the Python reference implementation of the
-_Data Integrity Fingerprint [DIF; @DIF]_ - a proposal for a human-readable
-fingerprint of scientific datasets [@DIF]. The software can be used via
-the command line, via a graphical user interface, or as a Python library for
-embedding in other software. In either case, the user has the choice of
-calculating the DIF based on a variety of (cryptographic) algorithms using
-serial (single CPU core) or parallel (multiple CPU cores) computing. In
-addition, a checksums file with fingerprints of individual files in a dataset
-can be created. These files can also serve as the basis for calculating the DIF
-and, in addition, can be compared against a dataset in order to reveal content
-differences in case a DIF could not be verified.
+We here present the reference implementation of the _Data Integrity
+Fingerprint (DIF)_ - a proposal for a human-readable fingerprint of scientific
+datasets [@DIF]. The software can be used via the command line, via a graphical
+user interface, or as a Python library for embedding in other software. In
+either case, the user has the choice of calculating the DIF based on a variety
+of (cryptographic) algorithms using serial (single CPU core) or parallel
+(multiple CPU cores) computing. In addition, a checksums file with fingerprints
+of individual files in a dataset can be created. These files can also serve as
+the basis for calculating the DIF and, in addition, can be compared against a
+dataset in order to reveal content differences in case a DIF could not be
+verified.
 
 # Statement of need
 
@@ -48,7 +48,7 @@ practice [@Wilkinson] and the concept of _Open Data_ has been incorporated
 into international policies [@EU]. However, there currently seems to be no good
 way to unmistakenly and indefinitely link these datasets to a corresponding
 journal publication, without relying on storage providers [e.g. GitHub, Dryad,
-Open Science Framework; @Tan]) or other services [e.g. Digital Object
+Open Science Framework; @Tan] or other services [e.g. Digital Object
 Identifier; @Liu] that need to be maintained [@Lin].
 
 The DIF provides a simple solution to this problem wihtout relying on a third
@@ -56,20 +56,20 @@ party by extending the concept of file verification to multi-file datasets
 (see also \autoref{fig:Fig1}):
 
 * The author of a journal article calculates checksums of all the files in the
-  dataset the article relates to.
+  dataset the article relates to
   
 * From these checksums the author calculates a single "master checksum" (the
-  DIF) that uniquly identifies the entire dataset.
+  DIF) that uniquly identifies the entire dataset
   
 * The author reports the DIF in the journal article
 
 * A reader of the journal article who obtained a copy of the dataset (from
   either the author or any other source) calculates the DIF of their copy of
-  the dataset and compares it to the correct DIF as stated in the article.
+  the dataset and compares it to the correct DIF as stated in the article
   
 * If the list of checksums of individual files in the original dataset is
   available, the author can furthermore investigate in detail the differences
-  between the datasets, in case of a DIF mismatch.
+  between the datasets, in case of a DIF mismatch
 
 ![Schematic overview of verifying the integrity of a dataset using the DIF.\label{fig:Fig1}](https://user-images.githubusercontent.com/2971539/143914028-ea2b8570-6db4-4f82-9bec-b1770fda7df8.png)
 
@@ -97,6 +97,8 @@ adapt to future developments in the domain of cryptography and computer
 security.
 
 # Specification
+
+Procedure for calculating the DIF:
 
 1. Choose a (cryptographic) hash function `Hash` (e.g. SHA-256)
 
