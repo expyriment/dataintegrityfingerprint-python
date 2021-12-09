@@ -96,7 +96,7 @@ Alternatively, the graphical user interface is available as `dataintegrityfinger
 * _Menu item "Options --> Multi-core processing"_ - Enables/disables parallel
   computing (usage of multiple CPU cores).
   
-  
+
 ### Programming library
 After successful installation, the Python package is available as `dataintegrityfingerprint`:
 
@@ -104,12 +104,162 @@ After successful installation, the Python package is available as `dataintegrity
 import dataintegrityfingerprint
 ```
 
-It contains the class `DataIntegrityFingerprint` which can be used to instantiate a DIF object:
+A DIF can then be created in the following way:
 
 ```python3
-dif = dataintegrityfingerprint.DataIntegrityFingerprint("/home/me/Downloads")
-print(dif)
-print(dif.checksums)
+dif = dataintegrityfingerprint.DataIntegrityFingerprint("/path/to/dataset")
+print(dif)  # get the DIF
+print(dif.checksums)  # get the list of checksums of individual files
 ```
 
-The code is self-documented using docstrings. Use `help(dataintegrityfingerprint.DataIntegrityFingerprint)` for information on what this class can do and how to use it.
+#### API documentation
+The main functionality for usage in other code is made available via the class `DataIntegrityFingerprint`.
+
+---
+
+##### DataIntegrityFingerprint
+Create a DataIntegrityFingerprint object.
+```
+DataIntegrityFingerprint(data,
+                         from_checksums_file=False,
+                         hash_algorithm='SHA-256',
+                         multiprocessing=True,
+                         allow_non_cryptographic_algorithms=False)
+ 
+    Parameters
+    ----------
+    data : str
+        the path to the data
+    from_checksums_file : bool
+        data argument is a checksums file
+    hash_algorithm : str
+        the hash algorithm (optional, default: sha256)
+    multiprocessing : bool
+        using multi CPU cores (optional, default: True)
+        speeds up creating of checksums for large data files
+    allow_non_cryptographic_algorithms : bool
+        set True only, if you need non cryptographic algorithms (see
+        notes!)
+    
+    Note
+    ----
+    We do not suggest to use non-cryptographic algorithms.
+    Non-cryptographic algorithms are, while much faster, not secure (e.g.
+    can be tempered with). Only use these algorithms to check for technical
+    file damage and in cases security is not of critical concern.
+```
+
+---
+
+The `DataIntegrityFingerprint` class includes a set of global variables which
+affect all instances.
+
+##### CHECKSUM_FILENAME_SEPARATOR = '  '
+Global variable.
+
+Default value = `'  '`
+
+##### CRYPTOGRAPHIC_ALGORITHMS
+Global variable.
+
+Default value = `['MD5', 'SHA-1', 'SHA-224', 'SHA-256', 'SHA-384', 'SHA-512',
+                  'SHA3-224', 'SHA3-256', 'SHA3-384', 'SHA3-512']`
+
+##### NON_CRYPTOGRAPHIC_ALGORITHMS
+Global variable.
+
+Default value = `['ADLER-32', 'CRC-32']`
+
+---
+
+Once initiated, a `DataIntegrityFingerprint` object provides several methods and
+attributes.
+
+##### dif_checksums
+Calculate differences of checksums to checksums file.
+```
+diff_checksums(filename)
+    
+    Parameters
+    ----------
+    filename : str
+        the name of the checksums file
+    
+    Returns
+    -------
+    diff : str
+        the difference of checksums to the checksums file
+        (minus means checksums is missing something from checksums file,
+        plus means checksums has something in addition to checksums file)
+```
+
+##### generate
+Generate hash list to get Data Integrity Fingerprint.
+```
+generate(progress=None)
+    
+    Parameters
+    ----------
+    progress: function, optional
+        a callback function for a progress reporting that takes the
+        following parameters:
+            count  -- the current count
+            total  -- the total count
+            status -- a string describing the status
+```
+
+##### get_files
+Get all files to hash.
+```
+get_files(self)
+   
+   Returns
+   -------
+   files : list
+       the list of files to hash
+```
+
+##### save_checksums
+Save the checksums to a file.
+```
+save_checksums(filename=None)
+   
+   Parameters
+   ----------
+   filename : str, optional
+       the name of the file to save checksums to
+   
+   Returns
+   -------
+   success : bool
+       whether saving was successful
+```
+
+---
+
+An initiated `DataIntegrityFingerprint` object also provides a set of
+read-only properties.
+
+##### allow_non_cryptographic_algorithms
+ Read-only property
+
+##### checksums
+Read-only property.
+
+##### data
+Read-only property.
+
+##### dif
+Read-only property.
+
+##### file_count
+Read-only property.
+
+##### file_hash_list
+Read-only property.
+
+##### hash_algorithm
+Read-only property.
+
+##### multiprocessing
+Read-only property.
