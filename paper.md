@@ -40,6 +40,7 @@ the basis for calculating the DIF and, in addition, can be compared against a
 dataset in order to reveal content differences in case a DIF could not be
 verified.
 
+
 # Statement of need
 
 In recent years, publicly sharing scientific datasets has become good research
@@ -83,7 +84,7 @@ More importantly, however, previous efforts are incompatible with each other,
 due to a lack of a formal specification of how to calculate the fingerprint.
 The (to our knowledge) only attempt at defining a standard procedure of how to
 calculate a fingerprint of a directory [@dirhash] is specifically designed to
-be extendable and requires a user to make decicions on a priori variety of
+be extendable and requires a user to make a priori decicions on variety of
 options, which all affect the calculation (and the result) and hence also need
 to be know by anyone wanting to verify the fingerprint. We believe that this
 amount of degrees of freedom (and potential error) are not a good fit for a
@@ -94,6 +95,17 @@ hash algorithm chosen to base all calculations on. While we recommend to
 use SHA-256, having a algorithm-independent DIF is crucial for being able to
 adapt to future developments in the domain of cryptography and computer
 security.
+
+We chose Python as the reference implementation for the DIF, because Python
+(a) is open source, (b) is available cross-platform, (c) offers very good code
+readability, (d) is widely-used in the scientific community, and (e) allowed
+us to implement the underlying calculation as well as command line and
+graphical user interfaces using only the built-in standard libary, without
+relying on a set of complex external dependencies. Not only does this make the
+reference implementation easy to understand and a good basis for other
+implementations, but it also simplifies maintainability of the software and
+ensures its long-term availability.
+
 
 # Specification
 
@@ -118,5 +130,6 @@ The procedure for calculating the DIF is:
 5. Retrieve the DIF as the hexadecimal digest of `Hash(l[0]l[1]...l[n])`
 
 Optionally, checksums of individual files and their file paths can be saved as a checksums file (lines of `c  p` for each `f).
+
 
 # References
