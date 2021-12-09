@@ -19,7 +19,7 @@ affiliations:
    index: 1
  - name: Donders Institute for Brain, Cognition and Behaviour, Radboud University Medical Center, Nijmegen, The Netherlands
    index: 2
- - name: "Department of Psychiatry, Maastricht University Medical Center, The Netherlands\n\n"
+ - name: Department of Psychiatry, Maastricht University Medical Center, The Netherlands
    index: 3
 date: 06 December 2021
 bibliography: paper.bib
