@@ -133,7 +133,7 @@ The procedure for calculating the DIF is:
 
 5. Retrieve the DIF as the hexadecimal digest of `Hash(l[0]l[1]...l[n])`
 
-Optionally, checksums of individual files and their file paths can be saved as a checksums file as lines of `c␣␣p` for each `f` (i.e. `c` followed by two U+0020 whitespace characters followed by `p`).
+Optionally, checksums of individual files and their file paths can be saved as a checksums file with lines of `c␣␣p` for each `f` (i.e. `c` followed by two U+0020 whitespace characters followed by `p`).
 
 
 # References
