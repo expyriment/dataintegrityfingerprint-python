@@ -101,7 +101,7 @@ Florian Krause <florian@expyriment.org""")
         sys.exit()
 
     if args["PATH"] is None:
-        print("Use -G to launch the GUI interface or -h for help.")
+        print("Use -G to launch the GUI or -h for details about command line interface")
         sys.exit()
 
     dif = DataIntegrityFingerprint(

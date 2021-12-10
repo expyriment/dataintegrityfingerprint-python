@@ -42,7 +42,7 @@ setuptools.setup(
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.6",
     entry_points = {
-        'console_scripts': [f'{PACKAGE_NAME}={PACKAGE_NAME}.__main__:run'],
+        'console_scripts': [f'{PACKAGE_NAME}={PACKAGE_NAME}.cli:cli'],
         'gui_scripts': [f'{PACKAGE_NAME}-gui={PACKAGE_NAME}.gui:start_gui']
     }
 )

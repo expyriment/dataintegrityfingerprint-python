@@ -2,7 +2,7 @@
 
 Reference Python implementation.
 
-For specification see https://github.com/expyriment/DIF).
+For specification see https://github.com/expyriment/DIF.
 
 """
 

@@ -1,4 +1,4 @@
-"""Data Intergrity Fingerprint (DIF) graphical user interface.
+"""Data Integrity Fingerprint (DIF) graphical user interface.
 
 Invoke with `python3 -m dataintegrityfingerprint.gui` or
 `dataintegrityfingerprint -G`.
