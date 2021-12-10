@@ -67,7 +67,7 @@ options:
 
 ```
 
-Alternatively, the graphical user interface is available as `dataintegrityfingerprint-gui`:
+In addition, a graphical user interface is available as `dataintegrityfingerprint-gui`:
 
 ![image](https://user-images.githubusercontent.com/2971539/143478538-6700a283-01db-4073-8692-2218d5a777c2.png)
 
