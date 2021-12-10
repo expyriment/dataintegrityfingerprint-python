@@ -19,7 +19,7 @@ affiliations:
    index: 1
  - name: Donders Institute for Brain, Cognition and Behaviour, Radboud University Medical Center, Nijmegen, The Netherlands
    index: 2
- - name: Department of Psychiatry, Maastricht University Medical Center, The Netherlands
+ - name: Department of Psychiatry, Brain+Nerve Centre, Maastricht University Medical Center, The Netherlands
    index: 3
 date: 06 December 2021
 bibliography: paper.bib
@@ -133,7 +133,7 @@ The procedure for calculating the DIF is:
 
 5. Retrieve the DIF as the hexadecimal digest of `Hash(l[0]l[1]...l[n])`
 
-Optionally, checksums of individual files and their file paths can be saved as a checksums file (lines of `c  p` for each `f).
+Optionally, checksums of individual files and their file paths can be saved as a checksums file (lines of `c  p` for each `f`; i.e. `c` followed by two U+0020 whitespace characters followed by `p`).
 
 
 # References
