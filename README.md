@@ -13,18 +13,23 @@ Data Integrity Fingerprint (DIF)
 _by [Oliver Lindemann](http://www.cognitive-psychology.eu/lindemann/) & [Florian Krause](https://floriankrause.org)_
 
 ## Table of contents
+
 * [Introduction](#introduction)
 * [Installation](#installation)
 * [Command line interface (CLI) application usage](#command-line-interface-cli-application-usage)
 * [Graphical user interface (GUI) application usage](#graphical-user-interface-gui-application-usage)
 * [Programming library (Python package) usage](#programming-library-python-package-usage)
 
+
 ## Introduction
+
 This software calculates the [Data Integrity Fingerprint (DIF)](https://github.com/expyriment/DIF) of multi-file datasets. It can be used via the command line, via a graphical user interface, or as a Python library for embedding in other software. In either case, the user has the choice of calculating the DIF based on a variety of (cryptographic) algorithms using serial (single CPU core) or parallel (multiple CPU cores) computing. In addition, a checksums file with fingerprints of individual files in a dataset can be created. These files can also serve as the basis for calculating the DIF and, in addition, can be compared against a dataset in order to reveal content differences in case a DIF could not be verified.
 
 **Note:** We strongly recommend to use SHA-256 or one of the other cryptographic algorithms for calculating the DIF. The non-cryptographic algorithms are significantly faster, but also significantly less secure (i.e. collisions are much more likely, breaking the uniqueness of a DIF, and opening a door for potential manipulation). They might hence only be an option for very large datasets in scenarios where a potential manipulation by a third party is not part of the threat model. The graphical user interface does not allow for selecting non-cryptographic algorithms.
 
+
 ## Installation
+
 The quickest way to use the application is to install it with [pipx](https://pypa.github.io/pipx/):
 
 ```
@@ -39,6 +44,7 @@ python -m pip install dataintegrityfingerprint
 
 
 ## Command line interface (CLI) application usage
+
 After successfull installation, the command line interface is available as `dataintegrityfingerprint`:
 
 ```
@@ -73,7 +79,9 @@ options:
 
 ```
 
+
 ## Graphical user interface (GUI) application usage
+
 After successfull installation, the graphical user interface is available as `dataintegrityfingerprint-gui`:
 
 ![image](https://user-images.githubusercontent.com/2971539/143478538-6700a283-01db-4073-8692-2218d5a777c2.png)
@@ -105,6 +113,7 @@ After successfull installation, the graphical user interface is available as `da
   
 
 ## Programming library (Python package) usage
+
 After successful installation, the Python package is available as `dataintegrityfingerprint`:
 
 ```python3
@@ -119,12 +128,16 @@ print(dif)  # get the DIF
 print(dif.checksums)  # get the list of checksums of individual files
 ```
 
+
 ### API documentation
+
 The main functionality for usage in other code is made available via the class `DataIntegrityFingerprint`.
 
 ---
 
+
 #### DataIntegrityFingerprint
+
 Create a DataIntegrityFingerprint object.
 ```
 DataIntegrityFingerprint(data,
@@ -162,17 +175,20 @@ The `DataIntegrityFingerprint` class includes a set of global variables which
 affect all instances.
 
 #### CHECKSUM_FILENAME_SEPARATOR = '  '
+
 Global variable.
 
 Default value = `'  '`
 
 #### CRYPTOGRAPHIC_ALGORITHMS
+
 Global variable.
 
 Default value = `['MD5', 'SHA-1', 'SHA-224', 'SHA-256', 'SHA-384', 'SHA-512',
                   'SHA3-224', 'SHA3-256', 'SHA3-384', 'SHA3-512']`
 
 #### NON_CRYPTOGRAPHIC_ALGORITHMS
+
 Global variable.
 
 Default value = `['ADLER-32', 'CRC-32']`
@@ -183,6 +199,7 @@ Once initiated, a `DataIntegrityFingerprint` object provides several methods and
 attributes.
 
 #### dif_checksums
+
 Calculate differences of checksums to checksums file.
 ```
 diff_checksums(filename)
@@ -201,6 +218,7 @@ diff_checksums(filename)
 ```
 
 #### generate
+
 Generate hash list to get Data Integrity Fingerprint.
 ```
 generate(progress=None)
@@ -216,6 +234,7 @@ generate(progress=None)
 ```
 
 #### get_files
+
 Get all files to hash.
 ```
 get_files(self)
@@ -227,6 +246,7 @@ get_files(self)
 ```
 
 #### save_checksums
+
 Save the checksums to a file.
 ```
 save_checksums(filename=None)
@@ -248,25 +268,33 @@ An initiated `DataIntegrityFingerprint` object also provides a set of
 read-only properties.
 
 #### allow_non_cryptographic_algorithms
- Read-only property
+
+Read-only property
 
 #### checksums
+
 Read-only property.
 
 #### data
+
 Read-only property.
 
 #### dif
+
 Read-only property.
 
 #### file_count
+
 Read-only property.
 
 #### file_hash_list
+
 Read-only property.
 
 #### hash_algorithm
+
 Read-only property.
 
 #### multiprocessing
+
 Read-only property.

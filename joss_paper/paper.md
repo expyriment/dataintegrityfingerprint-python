@@ -74,7 +74,7 @@ party by extending the concept of file verification to multi-file datasets
   available, the author can furthermore investigate in detail the differences
   between the datasets, in case of a DIF mismatch
 
-![Schematic overview of verifying the integrity of a dataset using the DIF.\label{fig:Fig1}](https://user-images.githubusercontent.com/2971539/143914028-ea2b8570-6db4-4f82-9bec-b1770fda7df8.png)
+![Schematic overview of verifying the integrity of a dataset using the DIF.\label{fig:Fig1}](flowchart.png)
 
 Notably, previous efforts to solve this problem outside of the scientific
 domain suffer from several shortcomings. Their implementations are either not
