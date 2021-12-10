@@ -23,7 +23,7 @@ _by [Oliver Lindemann](http://www.cognitive-psychology.eu/lindemann/) & [Florian
 
 ## Introduction
 
-This software calculates the [Data Integrity Fingerprint (DIF)](https://github.com/expyriment/DIF) of multi-file datasets. It can be used via the command line, via a graphical user interface, or as a Python library for embedding in other software. In either case, the user has the choice of calculating the DIF based on a variety of (cryptographic) algorithms using serial (single CPU core) or parallel (multiple CPU cores) computing. In addition, a checksums file with fingerprints of individual files in a dataset can be created. These files can also serve as the basis for calculating the DIF and, in addition, can be compared against a dataset in order to reveal content differences in case a DIF could not be verified.
+This software calculates the [Data Integrity Fingerprint (DIF)](https://www.expyriment.org/DIF/) of multi-file datasets. It can be used via the command line, via a graphical user interface, or as a Python library for embedding in other software. In either case, the user has the choice of calculating the DIF based on a variety of (cryptographic) algorithms using serial (single CPU core) or parallel (multiple CPU cores) computing. In addition, a checksums file with fingerprints of individual files in a dataset can be created. These files can also serve as the basis for calculating the DIF and, in addition, can be compared against a dataset in order to reveal content differences in case a DIF could not be verified.
 
 **Note:** We strongly recommend to use SHA-256 or one of the other cryptographic algorithms for calculating the DIF. The non-cryptographic algorithms are significantly faster, but also significantly less secure (i.e. collisions are much more likely, breaking the uniqueness of a DIF, and opening a door for potential manipulation). They might hence only be an option for very large datasets in scenarios where a potential manipulation by a third party is not part of the threat model. The graphical user interface does not allow for selecting non-cryptographic algorithms.
 
@@ -45,7 +45,7 @@ python -m pip install dataintegrityfingerprint
 
 ## Command line interface (CLI) application usage
 
-After successfull installation, the command line interface is available as `dataintegrityfingerprint`:
+After successful installation, the command line interface is available as `dataintegrityfingerprint`:
 
 ```
 dataintegrityfingerprint [-h] [-f] [-a ALGORITHM] [-C] [-D] [-G] [-L] [-s]
@@ -82,7 +82,7 @@ options:
 
 ## Graphical user interface (GUI) application usage
 
-After successfull installation, the graphical user interface is available as `dataintegrityfingerprint-gui`:
+After successful installation, the graphical user interface is available as `dataintegrityfingerprint-gui`:
 
 ![image](https://user-images.githubusercontent.com/2971539/143478538-6700a283-01db-4073-8692-2218d5a777c2.png)
 
@@ -178,7 +178,7 @@ affect all instances.
 
 Global variable.
 
-Default value = `'  '`
+Default value = `'␣␣'`  (i.e., two U+0020 whitespace characters)
 
 #### CRYPTOGRAPHIC_ALGORITHMS
 
