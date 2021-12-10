@@ -17,4 +17,4 @@ publish:
 clean:
 		@rm -rf build \
 			dist \
-			dataintegrityfingerprint.egg-info \
+			src/dataintegrityfingerprint.egg-info
