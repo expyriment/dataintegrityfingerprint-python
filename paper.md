@@ -28,7 +28,7 @@ bibliography: paper.bib
 
 # Summary
 
-We here present the reference implementation of the _Data Integrity
+We hereby present the reference implementation of the _Data Integrity
 Fingerprint (DIF)_ - a proposal for a human-readable fingerprint of scientific
 datasets [@DIF]. The software can be used via the command line, via a graphical
 user interface, or as a Python library for embedding in other software. In
@@ -43,19 +43,22 @@ verified.
 
 # Statement of need
 
-In recent years, publicly sharing scientific datasets has become good research
-practice [@Wilkinson] and the concept of _Open Data_ has been incorporated
-into international policies [@EU]. However, there currently seems to be no good
-way to unmistakenly and indefinitely link these datasets to a corresponding
-journal publication, without relying on storage providers [e.g. GitHub, Dryad,
-Open Science Framework; @Tan] or other services [e.g. Digital Object
-Identifier; @Liu] that need to be maintained [@Lin].
+In recent years, sharing scientific datasets has become good research practice
+[@Wilkinson] and the concept of _Open Data_ has been incorporated into
+international policies [@EU]. The practice to make scientific data from journal
+publication publicly available calls for a reliably procedure to link data and
+the corresponding publication unmistakenly and indefinitely. Data sharing relies
+nowadays typically on third-party storage providers [e.g. GitHub, Dryad, Open Science
+Framework; @Tan] or other services [e.g. Digital Object Identifier; @Liu] that
+need to be maintained [@Lin]. This reliability of data linkage is however highly
+depended on the existence of the mostly commerical services and therefore
+fragile and inappropriate for a persistent open data practice.
 
-The DIF provides a simple solution to this problem wihtout relying on a third
+The DIF provides a simple solution to this problem without relying on a third
 party by extending the concept of file verification to multi-file datasets
 (see also \autoref{fig:Fig1}):
 
-* The author of a journal article calculates checksums of all the files in the
+* The author of a journal article  calculates checksums of all the files in the
   dataset the article relates to
   
 * From these checksums the author calculates a single "master checksum" (the
@@ -80,6 +83,7 @@ command line [@checksum; @Dirtools] or graphical [@checksumdir; @hashdir;
 @checksum; @Dirtools; @DirHash; @dirhash-python; @filehash] user interface, or
 are not meant to be used as a programming library [@checksum]. The here
 presented software offers all of these features.
+
 More importantly, however, previous efforts are incompatible with each other,
 due to a lack of a formal specification of how to calculate the fingerprint.
 The (to our knowledge) only attempt at defining a standard procedure of how to
