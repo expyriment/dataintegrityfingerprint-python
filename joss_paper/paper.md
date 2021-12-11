@@ -45,16 +45,17 @@ verified.
 
 In recent years, sharing scientific datasets has become good research practice
 [@Wilkinson] and the concept of _Open Data_ has been incorporated into
-international policies [@EU]. The practice to make scientific data from journal
-publication publicly available calls for a reliably procedure to link data and
-the corresponding publication unmistakenly and indefinitely. Data sharing relies
-nowadays typically on third-party storage providers [e.g. GitHub, Dryad, Open Science
-Framework; @Tan] or other services [e.g. Digital Object Identifier; @Liu] that
-need to be maintained [@Lin]. This reliability of data linkage is however highly
-depended on the existence of the mostly commerical services and therefore
-fragile and inappropriate for a persistent open data practice.
+international policies [@EU]. Making the scientific data that corresponds to
+a published journal article publicly available calls for a reliable procedure to
+unmistakenly and indefinitely link the data to the article. Currently, this is
+typically implemented through storage [e.g. GitHub, Dryad, Open Science
+Framework; @Tan] and identification/linking providers
+[e.g. Digital Object Identifier; @Liu] that need to be constantly maintained [@Lin].
+This dependency on the availability of such (mostly commerical) third-party services,
+however, is fragile and inappropriate for a persistent and sustainable Open Data
+practice.
 
-The DIF provides a simple solution to this problem without relying on a third
+The DIF provides a simple alternative solution that does not rely on a third
 party by extending the concept of file verification to multi-file datasets
 (see also \autoref{fig:Fig1}):
 
