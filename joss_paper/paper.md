@@ -118,7 +118,7 @@ The procedure for calculating the DIF is:
 
 1. Choose a (cryptographic) hash function `Hash` (e.g. SHA-256)
 
-2.  For every file `f` in the (potentially nested) subtree under the dataset root directory,
+2.  For every file `f` in the (potentially nested) subtree under the dataset root directory (with symbolic links being followed),
 
     * calculate the checksum `c` as the hexadecimal digest (lower case letters) of `Hash(f)` (i.e. the hashed _binary contents_ of the file)
 
