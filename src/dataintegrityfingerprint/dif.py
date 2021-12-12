@@ -85,7 +85,7 @@ class DataIntegrityFingerprint:
 
         rtn = []
         if os.path.isdir(self._data):
-            for dir_, _, files in os.walk(self._data):
+            for dir_, _, files in os.walk(self._data, followlinks=True):
                 for filename in files:
                     rtn.append(os.path.join(dir_, filename))
         self._file_count = len(rtn)
