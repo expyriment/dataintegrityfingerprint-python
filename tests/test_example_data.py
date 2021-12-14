@@ -1,10 +1,31 @@
-import os
-import glob
 import filecmp
+import glob
+import io
+import os
+import shutil
 import tempfile
 import unittest
+import urllib.request
+import zipfile
 
 from dataintegrityfingerprint import DataIntegrityFingerprint
+
+
+def setUpModule():
+    print("Downloading example data...")
+    global TMP_DIR
+    global EXAMPLE_DATA_PATH
+    TMP_DIR = tempfile.mkdtemp()
+    http_response = urllib.request.urlopen("https://github.com/expyriment/dataintegrityfingerprint/archive/refs/heads/master.zip")
+    z = zipfile.ZipFile(io.BytesIO(http_response.read()))
+    z.extractall(path=TMP_DIR)
+    EXAMPLE_DATA_PATH = os.path.join(TMP_DIR,
+                                     "dataintegrityfingerprint-master",
+                                     "example_data")
+
+def tearDownModule():
+    global TMP_DIR
+    shutil.rmtree(TMP_DIR)
 
 
 class AllAlgorithmsTestCase(unittest.TestCase):
@@ -16,14 +37,14 @@ class AllAlgorithmsTestCase(unittest.TestCase):
             DataIntegrityFingerprint.CRYPTOGRAPHIC_ALGORITHMS \
             + DataIntegrityFingerprint.NON_CRYPTOGRAPHIC_ALGORITHMS
         self.difs = []
-        example_data_path = os.path.join(os.path.split(__file__)[0],
-                                         "..", "DIF", "example_data")
-        for data in glob.glob(f"{example_data_path}/*/"):
+        global TMP_DIR
+        global EXAMPLE_DATA_PATH
+        for data in glob.glob(f"{EXAMPLE_DATA_PATH}/*/"):
             for algorithm in available_algorithms:
                 for multiprocessing in (False, True):
                     dif = DataIntegrityFingerprint(
                         data, hash_algorithm=algorithm,
-                        multiprocessing=multiprocessing,
+            multiprocessing=multiprocessing,
                         allow_non_cryptographic_algorithms=True)
                     dif.generate()
                     self.difs.append(dif)
@@ -78,9 +99,9 @@ class AllAlgorithmsFromChecksumsFileTestCase(unittest.TestCase):
             DataIntegrityFingerprint.CRYPTOGRAPHIC_ALGORITHMS \
             + DataIntegrityFingerprint.NON_CRYPTOGRAPHIC_ALGORITHMS
         self.difs = []
-        example_data_path = os.path.join(os.path.split(__file__)[0],
-                                         "..", "DIF", "example_data")
-        for data in glob.glob(f"{example_data_path}/*/"):
+        global TMP_DIR
+        global EXAMPLE_DATA_PATH
+        for data in glob.glob(f"{EXAMPLE_DATA_PATH}/*/"):
             for algorithm in available_algorithms:
                 for multiprocessing in (False, True):
                     extension = "".join(

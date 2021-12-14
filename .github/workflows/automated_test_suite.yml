@@ -22,8 +22,6 @@ jobs:
         run: git config --global core.longpaths true
       - name: Check out repository
         uses: actions/checkout@v2
-        with:
-          submodules: recursive
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
