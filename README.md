@@ -16,10 +16,11 @@ _by [Oliver Lindemann](http://www.cognitive-psychology.eu/lindemann/) & [Florian
 
 * [Introduction](#introduction)
 * [Installation](#installation)
-* [Command line interface (CLI) application usage](#command-line-interface-cli-application-usage)
-* [Graphical user interface (GUI) application usage](#graphical-user-interface-gui-application-usage)
-* [Programming library (Python package) usage](#programming-library-python-package-usage)
-
+* Usage
+  * [Command line interface (CLI) application usage](#command-line-interface-cli-application-usage)
+  * [Graphical user interface (GUI) application usage](#graphical-user-interface-gui-application-usage)
+  * [Programming library (Python package) usage](#programming-library-python-package-usage)
+* [Support and contribution](#Support-and-contribution)
 
 ## Introduction
 
@@ -42,8 +43,9 @@ To also make use of the programming library, a classical pip installation is of 
 python -m pip install dataintegrityfingerprint
 ```
 
+## Usage 
 
-## Command line interface (CLI) application usage
+### Command line interface (CLI) application usage
 
 After successful installation, the command line interface is available as `dataintegrityfingerprint`:
 
@@ -80,7 +82,7 @@ options:
 ```
 
 
-## Graphical user interface (GUI) application usage
+### Graphical user interface (GUI) application usage
 
 After successful installation, the graphical user interface is available as `dataintegrityfingerprint-gui`:
 
@@ -112,7 +114,7 @@ After successful installation, the graphical user interface is available as `dat
   computing (usage of multiple CPU cores).
   
 
-## Programming library (Python package) usage
+### Programming library (Python package) usage
 
 After successful installation, the Python package is available as `dataintegrityfingerprint`:
 
@@ -298,3 +300,10 @@ Read-only property.
 #### multiprocessing
 
 Read-only property.
+
+
+## Support and contribution
+
+For any questions, please use the [discussion](https://github.com/expyriment/dataintegrityfingerprint-python/discussions) section from the code repository. 
+If you wish to contribute or report an issue, please use the [issue tracker](https://github.com/expyriment/dataintegrityfingerprint-python/issues) and 
+[pull requests](https://github.com/expyriment/dataintegrityfingerprint-python/pulls).

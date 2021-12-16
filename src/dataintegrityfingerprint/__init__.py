@@ -9,7 +9,7 @@ For specification see https://github.com/expyriment/DIF.
 __author__ = 'Oliver Lindemann <oliver@expyriment.org>, ' \
              'Florian Krause <florian@expyriment.org>'
 
-__version__ = '0.7.3'
+__version__ = '0.7.4'
 
 
 from .dif import DataIntegrityFingerprint
