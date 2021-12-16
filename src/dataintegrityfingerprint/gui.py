@@ -29,7 +29,7 @@ class App(ttk.Frame):
         self.master = master
         self.master.title("Data Integrity Fingerprint (DIF)")
         self.about_text = """Data Integrity Fingerprint (DIF)
-Reference Python implementation v{0}
+A reference implementation in Python v{0}
 
 Authors:
 Oliver Lindemann <oliver@expyriment.org>

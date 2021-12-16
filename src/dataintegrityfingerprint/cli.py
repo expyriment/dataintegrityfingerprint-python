@@ -25,8 +25,8 @@ def cli():
         sys.stdout.flush()
 
     parser = argparse.ArgumentParser(
-        description="""Data Integrity Fingerprint (DIF)
-Reference Python implementation v{0}""".format(__version__),
+        description="""Data Integrity Fingerprint (DIF) - A reference implementation in Python
+Version: v{0}""".format(__version__),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Authors:
 Oliver Lindemann <oliver@expyriment.org>

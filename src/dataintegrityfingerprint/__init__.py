@@ -1,6 +1,6 @@
 """Data Integrity Fingerprint (DIF).
 
-Reference Python implementation.
+A reference implementation in Python.
 
 For specification see https://github.com/expyriment/DIF.
 
@@ -9,7 +9,7 @@ For specification see https://github.com/expyriment/DIF.
 __author__ = 'Oliver Lindemann <oliver@expyriment.org>, ' \
              'Florian Krause <florian@expyriment.org>'
 
-__version__ = '0.7.4'
+__version__ = '0.7.5'
 
 
 from .dif import DataIntegrityFingerprint

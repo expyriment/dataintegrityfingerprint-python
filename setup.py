@@ -25,7 +25,7 @@ setuptools.setup(
     author='Oliver Lindemann, Florian Krause',
     author_email='oliver@expyriment.org, florian@expyriment.org',
     description='Data Integrity Fingerprint (DIF) - ' \
-    'Reference Python implementation',
+    'A reference implementation in Python',
     long_description=get_readme(),
     long_description_content_type='text/markdown',
     url="https://github.com/expyriment/dataintegrityfingerprint-python",

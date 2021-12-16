@@ -5,7 +5,7 @@ Data Integrity Fingerprint (DIF)
 [![PyPI](https://img.shields.io/pypi/v/dataintegrityfingerprint?style=flat)](https://pypi.org/project/dataintegrityfingerprint/)
 [![Automated test suite](https://github.com/expyriment/dataintegrityfingerprint-python/actions/workflows/automated_test_suite.yml/badge.svg)](https://github.com/expyriment/dataintegrityfingerprint-python/actions/workflows/automated_test_suite.yml)
 
-**Reference Python implementation**
+**A reference implementation in Python**
 * Command line interface (CLI) application
 * Graphical user interface (GUI) application
 * Programming library (Python package)
