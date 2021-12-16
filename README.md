@@ -304,14 +304,9 @@ Read-only property.
 
 ## Support and contribution
 
+For any questions, please also use the [Discussions](https://github.com/expyriment/dataintegrityfingerprint-python/discussions) 
+of this repository.
+
 If you wish to contribute or report an issue, please use the [issue tracker](https://github.com/expyriment/dataintegrityfingerprint-python/issues) and 
 [pull requests](https://github.com/expyriment/dataintegrityfingerprint-python/pulls) 
 from the code repository. 
-
-For any questions, please also use the issue track and mark it as question.
-
-### Code of conduct
-
-Please note that this project is released with a 
-[Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this 
-project you agree to  abide by its terms.
