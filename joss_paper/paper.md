@@ -1,5 +1,5 @@
 ---
-title: 'Data Integrity Fingerprint (DIF) - Reference Python implementation'
+title: 'Data Integrity Fingerprint (DIF) - A reference implementation in Python'
 tags:
   - Python
   - Open Data
