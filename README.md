@@ -304,6 +304,6 @@ Read-only property.
 
 ## Support and contribution
 
-For any questions, please use the [Discussion](https://github.com/expyriment/dataintegrityfingerprint-python/discussions) section from the code repository. 
+For any questions, please use the [discussion](https://github.com/expyriment/dataintegrityfingerprint-python/discussions) section from the code repository. 
 If you wish to contribute or report an issue, please use the [issue tracker](https://github.com/expyriment/dataintegrityfingerprint-python/issues) and 
 [pull requests](https://github.com/expyriment/dataintegrityfingerprint-python/pulls).
