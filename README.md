@@ -306,9 +306,7 @@ Read-only property.
 
 If you wish to contribute or report an issue, please use the [issue tracker](https://github.com/expyriment/dataintegrityfingerprint-python/issues) and 
 [pull requests](https://github.com/expyriment/dataintegrityfingerprint-python/pulls) 
-from the code repository. 
-
-For any questions, please also use the issue track and mark it as question.
+from the code repository.  For any questions, please also use the [issue tracker](https://github.com/expyriment/dataintegrityfingerprint-python/issues) and mark it as question.
 
 ### Code of conduct
 
