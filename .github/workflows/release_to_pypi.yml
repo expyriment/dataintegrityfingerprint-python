@@ -8,7 +8,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Check our repository
+    - name: Check out repository
       uses: actions/checkout@v2
     - name: Set up Python
       uses: actions/setup-python@v2
