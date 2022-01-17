@@ -1,18 +1,18 @@
 Data Integrity Fingerprint (DIF)
 ================================
-
 ![License](https://img.shields.io/pypi/l/dataintegrityfingerprint?style=flat)
-[![DOI](https://zenodo.org/badge/194649910.svg)](https://zenodo.org/badge/latestdoi/194649910)
-[![PyPI](https://img.shields.io/pypi/v/dataintegrityfingerprint?style=flat)](https://pypi.org/project/dataintegrityfingerprint/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5866698.svg)](https://doi.org/10.5281/zenodo.5866698)
+[![PyPI](https://img.shields.io/pypi/v/dataintegrityfingerprint?style=flat)](https://pypi.org/project/dataintegrityfingerprint/) 
 [![Automated test suite](https://github.com/expyriment/dataintegrityfingerprint-python/actions/workflows/automated_test_suite.yml/badge.svg)](https://github.com/expyriment/dataintegrityfingerprint-python/actions/workflows/automated_test_suite.yml)
 
 **A reference implementation in Python**
+
 * Command line interface (CLI) application
 * Graphical user interface (GUI) application
 * Programming library (Python package)
 
 _by [Oliver Lindemann](http://www.cognitive-psychology.eu/lindemann/) & [Florian Krause](https://floriankrause.org)_
-
+ 
 ## Table of contents
 
 * [Introduction](#introduction)
