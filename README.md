@@ -16,11 +16,12 @@ _by [Oliver Lindemann](http://www.cognitive-psychology.eu/lindemann/) & [Florian
 
 * [Introduction](#introduction)
 * [Installation](#installation)
-* Usage
+* [Usage](#usage)
   * [Command line interface (CLI) application usage](#command-line-interface-cli-application-usage)
   * [Graphical user interface (GUI) application usage](#graphical-user-interface-gui-application-usage)
   * [Programming library (Python package) usage](#programming-library-python-package-usage)
-* [Support and contribution](#Support-and-contribution)
+* [Support and contribution](#support-and-contribution)
+* [Citation](#citation)
 
 ## Introduction
 
@@ -307,3 +308,11 @@ Read-only property.
 For any questions, please use the [discussion](https://github.com/expyriment/dataintegrityfingerprint-python/discussions) section from the code repository. 
 If you wish to contribute or report an issue, please use the [issue tracker](https://github.com/expyriment/dataintegrityfingerprint-python/issues) and 
 [pull requests](https://github.com/expyriment/dataintegrityfingerprint-python/pulls).
+
+## Citation
+
+To cite this software conceptually, you can use the following general citation:
+
+>Lindemann, O., & Krause, F. Data Integrity Fingerprint (DIF) - A reference implementation in Python [Computer software]. https://doi.org/10.5281/zenodo.5866698
+
+**To cite a specific version (preferred), please see the corresponding citation under [releases](https://github.com/expyriment/dataintegrityfingerprint-python/releases)!**
