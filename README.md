@@ -1,7 +1,8 @@
 Data Integrity Fingerprint (DIF)
 ================================
 
-![GitHub](https://img.shields.io/pypi/l/dataintegrityfingerprint?style=flat)
+![License](https://img.shields.io/pypi/l/dataintegrityfingerprint?style=flat)
+[![DOI](https://zenodo.org/badge/194649910.svg)](https://zenodo.org/badge/latestdoi/194649910)
 [![PyPI](https://img.shields.io/pypi/v/dataintegrityfingerprint?style=flat)](https://pypi.org/project/dataintegrityfingerprint/)
 [![Automated test suite](https://github.com/expyriment/dataintegrityfingerprint-python/actions/workflows/automated_test_suite.yml/badge.svg)](https://github.com/expyriment/dataintegrityfingerprint-python/actions/workflows/automated_test_suite.yml)
 
