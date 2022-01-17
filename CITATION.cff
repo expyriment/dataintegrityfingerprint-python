@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Lindemann"
+  given-names: "Oliver"
+  orcid: "https://orcid.org/0000-0003-3789-5373"
+- family-names: "Krause"
+  given-names: "Florian"
+  orcid: "https://orcid.org/0000-0002-2754-3692"
+title: "Data Integrity Fingerprint (DIF) - A reference implementation in Python"
+doi: 10.5281/zenodo.5866698
+url: "https://github.com/expyriment/dataintegrityfingerprint-python"
