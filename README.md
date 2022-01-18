@@ -312,8 +312,8 @@ If you wish to contribute or report an issue, please use the [issue tracker](htt
 
 ## Citation
 
-To cite this software conceptually, you can use the following general citation:
+To cite this software conceptually, you can use the following general citation/DOI:
 
 >Lindemann, O., & Krause, F. Data Integrity Fingerprint (DIF) - A reference implementation in Python [Computer software]. https://doi.org/10.5281/zenodo.5866698
 
-**To cite a specific version (preferred), please see the corresponding citation under [releases](https://github.com/expyriment/dataintegrityfingerprint-python/releases)!**
+**To cite a specific version (preferred), please see the corresponding citation/DOI under [releases](https://github.com/expyriment/dataintegrityfingerprint-python/releases)!**
